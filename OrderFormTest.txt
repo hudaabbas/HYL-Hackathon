@@ -4,7 +4,7 @@ Faculty Name:
 Contact:
 Date:
 
-Original Request: null null, 0
+Original Request: Chair Mesh, 1
 
 Items Ordered
 ID: C9080
