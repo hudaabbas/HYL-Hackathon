@@ -9,11 +9,10 @@ import java.util.Scanner;
 */
 
 
-/** This class extends
-
+/** This class extends Database Access and handles all of the user input
+using a switch statement
 */
-//               [add] extends DatabaseAccess
-public class UserInput{
+public class UserInput extends DatabaseAccess{
 
     public static String furnitureCategory;
     public static String furnitureType;
@@ -22,112 +21,105 @@ public class UserInput{
     private boolean initiatedConnection;
     private int requestNum;
 
-    public UserInput(){
-        this.initiatedConnection = false;
+    /** this constructor also calls the super constructor
+    the database URL is hardcoded for now
+    @param the username for the database connection
+    @param the password for the database connection
+    */
+    public UserInput(String username,String password){
+        super("jdbc:mysql://localhost/inventory", username, password);
+        this.initiatedConnection = true;
+        this.requestNum = 1;
     }
 
+    /** this is the main menu method. it first makes sure a connection has
+    been made with the database before taking in a request.
+    @params nothing
+    @return 1 if no connection to DB, 2 if correct request give, 3 if user quits
+    @return default is 0 (wrong input given)
+    */
     public int displayMenu(){
         if(!initiatedConnection){
-            this.initiatedConnection = makeNewConnection();
             return 1;
         }
-        if(initiatedConnection){
-            if(!quitOrContinue()){
-                return 7;
-            }
-            showMenu();
-            if(furnitureCategory.equals("Chair")){
+        boolean continueProg = takeRequest();
+        if(initiatedConnection && continueProg){
+            if(correctNameOfObject()){
                 this.requestNum++;
                 return 2;
             }
-            if(furnitureCategory.equals("Desk")){
-                this.requestNum++;
-                return 3;
-            }
-            if(furnitureCategory.equals("Filing")){
-                this.requestNum++;
-                return 4;
-            }
-            if(furnitureCategory.equals("Lamp")){
-                this.requestNum++;
-                return 5;
-            }
-            if(furnitureCategory.equals("Manufacturer")){
-                this.requestNum++;
-                return 6;
-            }
         }
-        return 8; // weird name was added to the furniture category
+        if(!continueProg){
+            return 3;
+        }
+        System.out.println("wrong input given");
+        return 0; // weird name was added to the furniture category
     }
 
-    public void showMenu(){
-        System.out.println("\n * * * Taking Request #"+ requestNum + " * * * \n");
-        System.out.println("please enter your request in the form of [Object] [Type] [#]"+
-        "separated by spaces and with no brackets");
-        System.out.println("example: Chair Mesh 1\n");
-        Scanner scanner = new Scanner(System.in);
-        furnitureCategory = scanner.next();
-        furnitureType = scanner.next();
-        items = scanner.nextInt();
-    }
-    public boolean quitOrContinue(){
-        System.out.println("\nDo you want to continue? [y/n]\n");
-        Scanner scanner = new Scanner(System.in);
-        String recieved = scanner.next();
-        if(recieved.equals("y")){
-            return true;
-        }
-        if(recieved.equals("n")){
-            return false;
-        }
-        System.out.println("invalid input, please try again");
-        return quitOrContinue();
-    }
-
-    public boolean makeNewConnection(){
-        System.out.println("\n * * * Lets Connect to Data Base! * * * \n");
-        System.out.println("please enter your database url username and password"+
-        "separated by spaces");
-        System.out.println("example: jdbc:mysql://localhost/competition jaywhypee ensf409\n");
-        Scanner scanner = new Scanner(System.in);
-        String dbURL = scanner.next();
-        String username = scanner.next();
-        String password = scanner.next();
-        DatabaseAccess newDBAcess = new DatabaseAccess(dbURL, username, password);
-        if(newDBAcess.initializeConnection()){
+    /** this method checks if a correct furniture name was read.
+    @params nothing
+    @return true if correct, false if incorrect
+    */
+    public boolean correctNameOfObject(){
+        if(furnitureCategory.equals("Chair") || furnitureCategory.equals("Desk")
+        || furnitureCategory.equals("Filing") || furnitureCategory.equals("Lamp")
+        || furnitureCategory.equals("Manufacturer")){
             return true;
         }
         return false;
     }
 
+    /** this method takes the request: reads from command line using a scanner
+    @params nothing
+    @return default is true, false if user wants to quit
+    */
+    public boolean takeRequest(){
+        System.out.println("\n * * * Taking Request #"+ requestNum + " * * * \n");
+        System.out.println("please enter your request in the form of [Object] [Type] [#]"+
+        " separated by spaces and with no brackets");
+        System.out.println("example: Chair Mesh 1");
+        System.out.println("or write Quit to terminate program\n");
+        Scanner scanner = new Scanner(System.in);
+        furnitureCategory = scanner.next();
+        if(furnitureCategory.equals("Quit") || furnitureCategory.equals("quit")){
+            return false;
+        }
+        furnitureType = scanner.next();
+        items = scanner.nextInt();
+        return true;
+    }
+
+    /** this method processes the request [ADD]
+    @params nothing
+    @return nothing
+    */
+    public void processRequest(){
+        //make a new object of price calc
+        //call price calc to do its stuff 😎
+    }
+
     public static void main(String[] args) {
-        UserInput startProgram = new UserInput();
-        startProgram.displayMenu();
+        System.out.println("\n * * * Lets Connect to Data Base! * * * \n");
+        System.out.println("please enter your database username and password"+
+        " separated by spaces");
+        System.out.println("example: myname ensf409\n");
+        Scanner scanner = new Scanner(System.in);
+        String username = scanner.next();
+        String password = scanner.next();
+        UserInput startProgram = new UserInput(username, password);
+
         boolean endProgram = true;
         while(true){
             switch(startProgram.displayMenu()){
                 case 1:
-                    //finished displaying header, call the switch again
+                    System.out.println("\nNo Connection To Database");
+                    System.out.println("please run the program again");
+                    System.exit(1);
                     break;
                 case 2:
-                    //processChairRequest();
-                    System.out.println(furnitureCategory);
-                    OrderForm newform = new OrderForm();
-                    newform.createFile("OrderFormTest");
+                    startProgram.processRequest();
                     break;
                 case 3:
-                    //processDeskRequest();
-                    break;
-                case 4:
-                    //processFilingRequest();
-                    break;
-                case 5:
-                    //processLampRequest();
-                    break;
-                case 6:
-                    //processManuRequest();
-                    break;
-                case 7:
                     System.out.println("\nProgram terminated!\n");
                     endProgram = false;
                     break;
@@ -136,7 +128,5 @@ public class UserInput{
             }
         if(endProgram == false) break;
         }
-        
     }
-
 }
