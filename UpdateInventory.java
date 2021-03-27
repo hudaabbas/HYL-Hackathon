@@ -4,7 +4,7 @@
 @since 1.0
 */
 
-package edu.ucalgary.ensf409;
+//package edu.ucalgary.ensf409;
 
 
 import java.sql.*;
@@ -44,7 +44,7 @@ public class UpdateInventory {
 			   st.close();
 		   }
 		   catch(SQLException e) {
-			   System.out.println("Error, unable to delete teacher");
+			   System.out.println("Error, unable to get categories");
 		   }
 		
 		//Updates the table and sets all categories to N for items in the array
@@ -67,7 +67,7 @@ public class UpdateInventory {
 			//  st.close();
 		   } 
 		   catch(SQLException e) {
-			   System.out.println("Error, unable to delete teacher");
+			   System.out.println("Error, unable to update item status");
 		   }
 	}
 
