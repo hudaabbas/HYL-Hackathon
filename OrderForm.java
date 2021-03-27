@@ -22,7 +22,10 @@ public class OrderForm {
         this.totalPrice = "$190"; //PriceCalc.cheapestPrice.toString();
         //this.itemsOrdered = new String[2];
     }
-
+    public static void main(String args[]){
+        OrderForm newform = new OrderForm();
+        newform.createFile("OrderFormTest");
+    }
     public void createFile(String fileName) {
         
         BufferedWriter outputStream = null;

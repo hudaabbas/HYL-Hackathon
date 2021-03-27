@@ -4,7 +4,7 @@ Faculty Name:
 Contact:
 Date:
 
-Original Request: standing desk, 3
+Original Request: null null, 0
 
 Items Ordered
 ID: C9080
