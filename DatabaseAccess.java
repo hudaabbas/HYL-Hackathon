@@ -50,6 +50,10 @@ public class DatabaseAccess {
         return this.PASSWORD;
     }
 
+    public Connection getDBConnect(){
+        return this.dbConnect;
+    }
+
     public boolean initializeConnection() {
         /**
          * initializeConnection creates a connection with the SQL database inventory.

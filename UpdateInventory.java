@@ -9,8 +9,6 @@
 
 import java.sql.*;
 
-import java.sql.*;
-
 public class UpdateInventory extends DatabaseAccess {
 	
 	UpdateInventory(String DBURL, String USERNAME, String PASSWORD) {
@@ -38,7 +36,7 @@ public class UpdateInventory extends DatabaseAccess {
 		try {
 			for(int i=0;i<itemsOrdered.length;i++) {
 			   String query= "DELETE FROM "+table+" WHERE ID = ?";
-			   PreparedStatement st= getDbConnect().prepareStatement(query);
+			   PreparedStatement st= getDBConnect().prepareStatement(query);
 			   
 			   st.setString(1, itemsOrdered[i]);
 			
