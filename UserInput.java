@@ -15,9 +15,9 @@ import java.util.Scanner;
 //               [add] extends DatabaseAccess
 public class UserInput{
 
-    public String furnitureCategory;
-    public String furnitureType;
-    public int items;
+    public static String furnitureCategory;
+    public static String furnitureType;
+    public static int items;
 
     private boolean initiatedConnection;
     private int requestNum;
@@ -66,9 +66,9 @@ public class UserInput{
         "separated by spaces and with no brackets");
         System.out.println("example: Chair Mesh 1\n");
         Scanner scanner = new Scanner(System.in);
-        this.furnitureCategory = scanner.next();
-        this.furnitureType = scanner.next();
-        this.items = scanner.nextInt();
+        furnitureCategory = scanner.next();
+        furnitureType = scanner.next();
+        items = scanner.nextInt();
     }
     public boolean quitOrContinue(){
         System.out.println("\nDo you want to continue? [y/n]\n");
@@ -111,6 +111,9 @@ public class UserInput{
                     break;
                 case 2:
                     //processChairRequest();
+                    System.out.println(furnitureCategory);
+                    OrderForm newform = new OrderForm();
+                    newform.createFile("OrderFormTest");
                     break;
                 case 3:
                     //processDeskRequest();
