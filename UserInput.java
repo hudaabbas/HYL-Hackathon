@@ -15,9 +15,9 @@ import java.util.Scanner;
 //               [add] extends DatabaseAccess
 public class UserInput{
 
-    private String furnitureCategory;
-    private String furnitureType;
-    private int items;
+    public String furnitureCategory;
+    public String furnitureType;
+    public int items;
 
     private boolean initiatedConnection;
     private int requestNum;
@@ -133,6 +133,7 @@ public class UserInput{
             }
         if(endProgram == false) break;
         }
+        
     }
 
 }
