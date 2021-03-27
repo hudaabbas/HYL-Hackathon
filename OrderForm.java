@@ -10,22 +10,18 @@
 
 import java.io.*;
 
-public class OrderForm {
+public class OrderForm extends UserInput{
     private String totalPrice;
     private String[] itemsOrdered = {"C9080","C83410"};
     private String originalRequest;
 
     //default constructor
     public OrderForm(){
-        UserInput user = new UserInput();
-        this.originalRequest =  user.furnitureCategory + " " + user.furnitureType + ", " + String.valueOf(user.items); //"standing desk, 3";
+        this.originalRequest =  UserInput.furnitureCategory + " " + UserInput.furnitureType + ", " + String.valueOf(UserInput.items); //"standing desk, 3";
         this.totalPrice = "$190"; //PriceCalc.cheapestPrice.toString();
         //this.itemsOrdered = new String[2];
     }
-    public static void main(String args[]){
-        OrderForm newform = new OrderForm();
-        newform.createFile("OrderFormTest");
-    }
+
     public void createFile(String fileName) {
         
         BufferedWriter outputStream = null;
