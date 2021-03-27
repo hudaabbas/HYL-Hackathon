@@ -50,7 +50,7 @@ public class DatabaseAccess {
         return this.PASSWORD;
     }
 
-    public void initializeConnection() {
+    public boolean initializeConnection() {
         /**
          * initializeConnection creates a connection with the SQL database inventory.
          */
@@ -58,7 +58,9 @@ public class DatabaseAccess {
             dbConnect = DriverManager.getConnection(this.DBURL, this.USERNAME, this.PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public void close () {
