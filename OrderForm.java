@@ -11,21 +11,18 @@
 import java.io.*;
 
 public class OrderForm {
-    public String totalPrice;
-    public String[] itemsOrdered = {"C9080","C83410"};
-    public String originalRequest;
+    private String totalPrice;
+    private String[] itemsOrdered = {"C9080","C83410"};
+    private String originalRequest;
 
     //default constructor
     public OrderForm(){
-        this.originalRequest = "standing desk, 3"; //UserInput.furnitureCategory + " " + UserInput.furnitureType + ", " UserInput.items;
+        UserInput user = new UserInput();
+        this.originalRequest =  user.furnitureCategory + " " + user.furnitureType + ", " + String.valueOf(user.items); //"standing desk, 3";
         this.totalPrice = "$190"; //PriceCalc.cheapestPrice.toString();
         //this.itemsOrdered = new String[2];
     }
 
-    public static void main(String[] args){
-        OrderForm newform = new OrderForm();
-        newform.createFile("OrderFormTest");
-    }
     public void createFile(String fileName) {
         
         BufferedWriter outputStream = null;
