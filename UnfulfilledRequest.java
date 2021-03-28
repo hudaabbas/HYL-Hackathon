@@ -13,9 +13,6 @@ public class UnfulfilledRequest extends DatabaseAccess{
     private int numOfManufacturers;
     private ResultSet results;
 
-    public String furnitureCategory = "Chair"; // HARD CODED
-    public String furnitureType = "Executive"; // HARD CODED
-
     public UnfulfilledRequest(String username, String password){
         super("jdbc:mysql://localhost/inventory", username, password);
         super.initializeConnection();
@@ -36,9 +33,9 @@ public class UnfulfilledRequest extends DatabaseAccess{
         int count = 0;
         try{
             Statement myStmt = dbConnect.createStatement();
-            results = myStmt.executeQuery("SELECT * FROM "+furnitureCategory);
+            results = myStmt.executeQuery("SELECT * FROM "+ UserInput.furnitureCategory);
             while(results.next()){
-                if(results.getString("Type").equals(furnitureType)){
+                if(results.getString("Type").equals(UserInput.furnitureType)){
                     manuID[count] = results.getString("ManuID");
                     count++;
                 }
@@ -95,9 +92,4 @@ public class UnfulfilledRequest extends DatabaseAccess{
         System.out.print(".\n");
     }
 
-    // public static void main(String[] args){
-    //     UnfulfilledRequest checkClass = new UnfulfilledRequest("jaywhypee","ensf409");
-    //     checkClass.print();
-    //     checkClass.close();
-    // }
 }

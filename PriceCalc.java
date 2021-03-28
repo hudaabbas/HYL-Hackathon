@@ -14,12 +14,13 @@ import java.sql.*;
 import java.util.*;
 
 public class PriceCalc extends DatabaseAccess{
-    public boolean fulfilled = false;
-    public int cheapestPrice;
+    public boolean fulfilled = true;
+    public static int cheapestPrice;
     public String[] itemCombination;
     public ArrayList<String> furnitures = new ArrayList<String>();
     public ArrayList<String> furnitureTypePrice = new ArrayList<String>();
     public ResultSet results;
+
     public PriceCalc(String DBURL, String USERNAME, String PASSWORD) {
 		super(DBURL, USERNAME, PASSWORD);
     }
@@ -28,7 +29,7 @@ public class PriceCalc extends DatabaseAccess{
      
         try {                    
             Statement myStmt = getDBConnect().createStatement();
-            results = myStmt.executeQuery("SELECT * FROM " + UserInput.furnitureCategory + "WHERE Type = " + UserInput.furnitureType);
+            results = myStmt.executeQuery("SELECT * FROM " + UserInput.furnitureCategory);
 
             while(results.next()){
                 if(results.getString("Type").equals(UserInput.furnitureType)){
@@ -36,6 +37,7 @@ public class PriceCalc extends DatabaseAccess{
                     furnitureTypePrice.add(results.getString("Price"));
                 } 
             }
+            /*
             if(UserInput.furnitureCategory == "Chair"){
                 returnCheapestForChair();
             } 
@@ -46,6 +48,17 @@ public class PriceCalc extends DatabaseAccess{
             }else{
                 returnCheapestForLamp();
             }
+            */
+
+            if(fulfilled){
+                cheapestPrice = 400;
+                OrderForm order= new OrderForm(getDburl(),getUsername(),getPassword());
+                order.createFile("testing");
+            } else{
+                UnfulfilledRequest checkClass = new UnfulfilledRequest(getUsername(),getPassword());
+                checkClass.print();
+                checkClass.close();
+            }
 
             results.close();
             myStmt.close();
@@ -54,7 +67,7 @@ public class PriceCalc extends DatabaseAccess{
         }
       
     }
-
+    /*
     public void returnCheapestForChair() { 
         String legs;
         String arms;
@@ -131,7 +144,7 @@ public class PriceCalc extends DatabaseAccess{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     
 

@@ -10,15 +10,16 @@
 
 import java.io.*;
 
-public class OrderForm {
+public class OrderForm extends DatabaseAccess{
     private String totalPrice;
-    private String[] itemsOrdered = {"C9080","C83410"};
+    private String[] itemsOrdered = {"L649"};
     private String originalRequest;
 
     //default constructor
-    public OrderForm(){
+    public OrderForm(String DBURL, String USERNAME, String PASSWORD){
+        super(DBURL, USERNAME, PASSWORD);
         this.originalRequest =  UserInput.furnitureCategory + " " + UserInput.furnitureType + ", " + String.valueOf(UserInput.items); //"standing desk, 3";
-        this.totalPrice = "$190"; //PriceCalc.cheapestPrice.toString();
+        this.totalPrice = "$" + String.valueOf(PriceCalc.cheapestPrice);
         //this.itemsOrdered = new String[2];
     }
 
@@ -64,6 +65,10 @@ public class OrderForm {
           }
         }
     
+        UpdateInventory update = new UpdateInventory(getDburl(),getUsername(),getPassword());
+        update.setItemsOrdered(itemsOrdered);
+        update.removeItem(UserInput.furnitureCategory);
+
       }
 }
 

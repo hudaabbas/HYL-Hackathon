@@ -28,6 +28,7 @@ public class DatabaseAccess {
         this.DBURL = DBURL;
         this.USERNAME = USERNAME;
         this.PASSWORD = PASSWORD;
+        initializeConnection();
     }
     public String getDburl() {
         /**
@@ -51,7 +52,7 @@ public class DatabaseAccess {
     }
 
     public Connection getDBConnect(){
-        return dbConnect;
+        return this.dbConnect;
     }
 
     public boolean initializeConnection() {
