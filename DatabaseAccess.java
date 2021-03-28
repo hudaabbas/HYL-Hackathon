@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 /**
  @author Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
- @version 1.0
+ @version 1.3
  @since 1.0
   * DatabaseAccess.java accesses and updates the SQL inventory database. It has data members DBURL to specify
   * which database is being accessed, USERNAME to specific username of user, PASSWORD and dbConnect
