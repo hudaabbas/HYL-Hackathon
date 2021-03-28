@@ -17,8 +17,6 @@ public class UserInput extends DatabaseAccess{
     public static String furnitureCategory;
     public static String furnitureType;
     public static int items;
-    public static String username;
-    public static String password;
 
     private boolean initiatedConnection;
     private int requestNum;
@@ -28,12 +26,11 @@ public class UserInput extends DatabaseAccess{
     @param the username for the database connection
     @param the password for the database connection
     */
-    public UserInput(String username,String password){
-        super("jdbc:mysql://localhost/inventory", username, password);
+    public UserInput(String myUsername,String myPassword){
+        super("jdbc:mysql://localhost/inventory", myUsername, myPassword);
         this.initiatedConnection = true;
         this.requestNum = 1;
-        this.username = username;
-        this.password = password;
+
     }
 
     /** this is the main menu method. it first makes sure a connection has
@@ -98,8 +95,8 @@ public class UserInput extends DatabaseAccess{
     @return nothing
     */
     public void processRequest(){
-        //make a new object of price calc
-        //call price calc to do its stuff 😎
+        PriceCalc calculation = new PriceCalc(getDburl(), getUsername(), getPassword());
+        calculation.getTableFromDatabase();
     }
 
     public static void main(String[] args) {
@@ -108,9 +105,7 @@ public class UserInput extends DatabaseAccess{
         " separated by spaces");
         System.out.println("example: myname ensf409\n");
         Scanner scanner = new Scanner(System.in);
-        username = scanner.next();
-        password = scanner.next();
-        UserInput startProgram = new UserInput(username, password);
+        UserInput startProgram = new UserInput(scanner.next(), scanner.next());
 
         boolean endProgram = true;
         while(true){
