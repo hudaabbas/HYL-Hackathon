@@ -1,5 +1,5 @@
 /**
- * @author Huda Abbas <a href="mailto:huda.abbas@ucalgar.ca">huda.abbas@ucalgary.ca</a>
+ * @author Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
  * @version 1.1
  * @since 1.0
 */
@@ -10,7 +10,7 @@
 
 import java.io.*;
 
-public class OrderForm extends UserInput{
+public class OrderForm {
     private String totalPrice;
     private String[] itemsOrdered = {"C9080","C83410"};
     private String originalRequest;
