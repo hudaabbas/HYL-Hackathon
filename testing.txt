@@ -4,9 +4,9 @@ Faculty Name:
 Contact:
 Date:
 
-Original Request: Lamp Desk, 13
+Original Request: Chair Mesh, 1
 
 Items Ordered
-ID: L649
+ID: C0942,C9890
 
-Total Price: $400
+Total Price: $150

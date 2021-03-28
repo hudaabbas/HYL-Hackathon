@@ -36,8 +36,16 @@ public class UnfulfilledRequest extends DatabaseAccess{
             results = myStmt.executeQuery("SELECT * FROM "+ UserInput.furnitureCategory);
             while(results.next()){
                 if(results.getString("Type").equals(UserInput.furnitureType)){
-                    manuID[count] = results.getString("ManuID");
-                    count++;
+                    boolean add = true;
+                    for(int i = 0; i<count; i++){
+                        if(manuID[count] == results.getString("ManuID")){
+                            add = false;
+                        }
+                    }
+                    if(add){
+                        manuID[count] = results.getString("ManuID");
+                        count++;
+                    }
                 }
             }
             myStmt.close();
@@ -47,6 +55,7 @@ public class UnfulfilledRequest extends DatabaseAccess{
         }
         return manuID;
     }
+
 
     /** This method goes through the database and looks for the name of
     manufacturers based on the IDs found by findIDForPRint()
