@@ -52,7 +52,7 @@ public class DatabaseAccess {
     }
 
     public Connection getDBConnect(){
-        return this.dbConnect;
+        return dbConnect;
     }
 
     public boolean initializeConnection() {
