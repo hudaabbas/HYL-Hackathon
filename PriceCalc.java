@@ -12,15 +12,17 @@
 //package edu.ucalgary.ensf409;
 
 import java.sql.*;
-import java.util.*;
 
 public class PriceCalc extends DatabaseAccess{
-    public boolean fulfilled = true;
+    public boolean fulfilled = false;
     public static int cheapestPrice;
     public String[] itemCombination;
-    public ArrayList<String> furnitures = new ArrayList<String>();
-    public ArrayList<String> furnitureTypePrice = new ArrayList<String>();
     public ResultSet results;
+    private String[] categories;
+	private String[] itemsAvailablePrice;
+	private String[] ID;
+	private String[][] typeAvailable;
+	private int numOfItems=0;
 
     public PriceCalc(String DBURL, String USERNAME, String PASSWORD) {
 		super(DBURL, USERNAME, PASSWORD);
@@ -28,170 +30,56 @@ public class PriceCalc extends DatabaseAccess{
 
     public void getTableFromDatabase() { 
      
-        try {                    
-            Statement myStmt = getDBConnect().createStatement();
-            results = myStmt.executeQuery("SELECT * FROM " + UserInput.furnitureCategory);
+        try {
+            findCategories(UserInput.furnitureCategory);
 
-            while(results.next()){
-                if(results.getString("Type").equals(UserInput.furnitureType)){
-                    furnitures.add(results.getString("ID")); 
-                    furnitureTypePrice.add(results.getString("Price"));
-                } 
+            int price  = Integer.parseInt(validCombinations(0));
+            if( cheapestPrice > price ) {
+                cheapestPrice = price;
             }
-            /*
-            if(UserInput.furnitureCategory == "Chair"){
-                returnCheapestForChair();
-            } 
-            else if(UserInput.furnitureCategory == "Desk"){
-                returnCheapestForDesk();
-            }else if(UserInput.furnitureCategory == "Filing"){
-                returnCheapestForFiling();
-            }else{
-                returnCheapestForLamp();
-            }
-            */
 
             if(fulfilled){
-                cheapestPrice = 400;
+                cheapestPrice = 150;
                 OrderForm order= new OrderForm(getDburl(),getUsername(),getPassword());
-                order.createFile("testing");
+                order.createFile("OrderForm");
             } else{
                 UnfulfilledRequest checkClass = new UnfulfilledRequest(getUsername(),getPassword());
                 checkClass.print();
                 checkClass.close();
             }
-
-            results.close();
-            myStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch(NumberFormatException e){
+            UnfulfilledRequest checkClass = new UnfulfilledRequest(getUsername(),getPassword());
+            checkClass.print();
+            checkClass.close(); 
         }
-      
-    }
-    /*
-    public void returnCheapestForChair() { 
-        String legs;
-        String arms;
-        String seat;
-        String cushion;
-        String type;
-        try {  
-            if( results.getString("Leg").equals("Y")){
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+     
     }
 
-    public void returnCheapestForLamp() { 
-        boolean base;
-        boolean bulb;
-        int price = 0; 
-        try {  
-            while(results.next()){
-                if( results.getString("Base").equals("Y")) {
-                    if(Integer.parseInt(results.getString("Price")) < price){
-                        base = true;
-                        price = Integer.parseInt(results.getString("Price"));
-                    }
-                    if(results.getString("Bulb").equals("Y")){
-                        bulb = true;
-                    } else{
-                        bulb = false;
-                    }
-                } else{
-                    base = false;
-                    if( results.getString("Bulb").equals("Y")){
-                        if(Integer.parseInt(results.getString("Price")) < price){
-                            bulb = true;
-                            price = Integer.parseInt(results.getString("Price"));
-                        } else{
-                            bulb = false;
-                        }
-                    }
-                }
-                
-            }
-         
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    
-    }
-
-    public void returnCheapestForDesk() {
-        String legs;
-        String drawer;
-        String top;
-         
-        try {  
-            if( results.getString("Leg").equals("Y")){
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void returnCheapestForFiling() { 
-        String rails;
-        String drawers;
-        String cabinet;
-        try {  
-            if( results.getString("Leg").equals("Y")){
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    
-
-
-}
-
-/*package edu.ucalgary.ensf409;
-
-import java.sql.*;
-
-public class PriceCalc extends DatabaseAccess{
-	private String[] categories;
-	private String[] itemsAvailable;
-	private String[] ID;
-	private String[] typeAvailable;
-	private int numOfItems=0;
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	public PriceCalc(String URL, String USERNAME,String PASSWORD) {
-		super(URL,USERNAME,PASSWORD);
-	}
 	
 /*
  * Stores all the furniture pieces into a string array	
  */
-/*
+
 	public void findCategories(String table) {
 		try {
-			   Statement st= getDbConnect().prepareStatement(table);
+			   Statement st= getDBConnect().prepareStatement(table);
 			   ResultSet rs = st.executeQuery("SELECT * FROM "+table);
 			   
 			   ResultSetMetaData rsmd = rs.getMetaData();
 			   
 //			   Gets number of columns besides the 4 constant ones (ID, Type, Price, ManuID)
 			   int columnCount = rsmd.getColumnCount()-4;
-			   
-			   for (int i = 1,j=0; i <= columnCount; i++,j++ ) {
+			   categories = new String[columnCount];
+			   for (int i = 1,j=0; i <= rsmd.getColumnCount(); i++) {
 				   if(!rsmd.getColumnName(i).equals("ID")&&!rsmd.getColumnName(i).equals("Type")
-					   &&!rsmd.getColumnName(i).equals("Price")&&!rsmd.getColumnName(i).equals("MaunID")){
+					   &&!rsmd.getColumnName(i).equals("Price")&&!rsmd.getColumnName(i).equals("ManuID")){
+                          // System.out.println(rsmd.getColumnName(i));
 					  categories[j] = rsmd.getColumnName(i);
+                      j++;
 					}
 			   }
-			   typeAvailable=new String[categories.length];
+			   
+               getItemsInCategories(table, UserInput.furnitureType);
 			   st.close();
 		   }
 		   catch(SQLException e) {
@@ -204,24 +92,76 @@ public class PriceCalc extends DatabaseAccess{
 	public void getItemsInCategories(String table, String furnitureType ) {
 		
 		try {
-			Statement st= getDbConnect().prepareStatement(table);
-			ResultSet rs = st.executeQuery("SELECT * FROM "+table);
+			Statement st= getDBConnect().prepareStatement(table);
+			ResultSet rs = st.executeQuery("SELECT * FROM "+ table);
 		
 			while(rs.next()) {
     			if(furnitureType.equals(rs.getString("Type"))) {
     				numOfItems++;
     			}
     		}
-	}
-		catch(SQLException e) {
+
+            ResultSet rf = st.executeQuery("SELECT * FROM "+ table);
+            
+            itemsAvailablePrice = new String[numOfItems];
+            ID = new String[numOfItems];
+			typeAvailable = new String[numOfItems][categories.length];;
+
+            while(rf.next()) {
+                int i = 0;
+    			    if(furnitureType.equals(rf.getString("Type"))) {
+    				
+                        itemsAvailablePrice[i] = rf.getString("Price");
+                        ID[i] = rf.getString("ID");
+                        
+                        for (int j = 0; j < categories.length ; j++){
+                            typeAvailable[i][j] = rf.getString(categories[j]);
+                           // System.out.print(typeAvailable[i][j]);
+                        }
+                       //System.out.println();
+                       i++;
+                    }
+                    
+    		}
+    	
+        } catch(SQLException e) {
 		   System.out.println("Error, unable to check for furniture availability");
-		  }
-		
-		
+		}	
 	
 	}
+
+    public String validCombinations(int type) {
+        boolean myitems[] = new boolean[categories.length];
+        String myprice ="0";
+        int count = 0;
+        for(int i = 0; i < myitems.length; i++){
+            if(myitems[i]){
+                count++;
+            }
+            
+        }
+        if(count == myitems.length){
+            fulfilled = true;
+            return myprice;
+        } 
+        if(type == numOfItems){
+            return myprice;
+        }
+        for(int j = 0; j < categories.length ; j++){
+            if(typeAvailable[type][j].equals("Y")) {
+                myitems[j] = true;
+                myprice = itemsAvailablePrice[j];
+            }else{
+                myitems[j] = false;
+                myprice += validCombinations(type + 1); 
+            }  
+
+        } 
+        
+        return "invalid";
+             
+
+    }
 	
-	
-	
-}*/
+}
 
