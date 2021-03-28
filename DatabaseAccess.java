@@ -16,7 +16,7 @@ public class DatabaseAccess {
     public final String DBURL; //store the database url information, no setters
     public final String USERNAME; //store the user's account username
     public final String PASSWORD; //store the user's account password
-    private Connection dbConnect; //connection data member to establish connection to interact with database
+    public static Connection dbConnect; //connection data member to establish connection to interact with database
 
     DatabaseAccess(String DBURL, String USERNAME, String PASSWORD){
         /**
