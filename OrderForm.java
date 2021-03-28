@@ -12,7 +12,7 @@ import java.io.*;
 
 public class OrderForm extends DatabaseAccess{
     private String totalPrice;
-    private String[] itemsOrdered = {"L649"};
+    private String[] itemsOrdered = {"C0942,C9890"};
     private String originalRequest;
 
     //default constructor

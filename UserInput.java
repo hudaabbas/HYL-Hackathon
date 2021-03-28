@@ -83,10 +83,12 @@ public class UserInput extends DatabaseAccess{
         Scanner scanner = new Scanner(System.in);
         furnitureCategory = scanner.next();
         if(furnitureCategory.equals("Quit") || furnitureCategory.equals("quit")){
+            scanner.close();
             return false;
         }
         furnitureType = scanner.next();
         items = scanner.nextInt();
+        scanner.close();
         return true;
     }
 
@@ -106,7 +108,7 @@ public class UserInput extends DatabaseAccess{
         System.out.println("example: myname ensf409\n");
         Scanner scanner = new Scanner(System.in);
         UserInput startProgram = new UserInput(scanner.next(), scanner.next());
-
+        scanner.close();
         boolean endProgram = true;
         while(true){
             switch(startProgram.displayMenu()){
