@@ -96,9 +96,10 @@ public class UserInput extends DatabaseAccess{
     @params nothing
     @return nothing
     */
-    public void processRequest(){
+    public int processRequest(){
         PriceCalc calculation = new PriceCalc(getDburl(), getUsername(), getPassword());
         calculation.getTableFromDatabase();
+        return calculation.getPrice();
     }
 
     private static UserInput initalizeConstructor(Scanner scanner){
