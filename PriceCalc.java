@@ -28,6 +28,9 @@ public class PriceCalc extends DatabaseAccess{
 		super(DBURL, USERNAME, PASSWORD);
     }
 
+    public int getPrice(){
+        return cheapestPrice;
+    }
     public void getTableFromDatabase() { 
      
         try {

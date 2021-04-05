@@ -43,7 +43,9 @@ public class UserInput extends DatabaseAccess{
         if(!initiatedConnection){
             return 1;
         }
-        boolean continueProg = takeRequest();
+        Scanner scanned = new Scanner(System.in);
+        boolean continueProg = takeRequest(scanned);
+        scanned.close();
         if(initiatedConnection && continueProg){
             if(correctNameOfObject()){
                 this.requestNum++;
@@ -74,21 +76,19 @@ public class UserInput extends DatabaseAccess{
     @params nothing
     @return default is true, false if user wants to quit
     */
-    public boolean takeRequest(){
+    private boolean takeRequest(Scanner scanner){
         System.out.println("\n * * * Taking Request #"+ requestNum + " * * * \n");
-        System.out.println("please enter your request in the form of [Object] [Type] [#]"+
-        " separated by spaces and with no brackets");
+        System.out.println("Please enter your furniture request in the form of 'Category' 'Type' '#'"+
+        " with the first letter capitalized, separated by spaces and with no quotations");
         System.out.println("example: Chair Mesh 1");
         System.out.println("or write Quit to terminate program\n");
-        Scanner scanner = new Scanner(System.in);
+        
         furnitureCategory = scanner.next();
         if(furnitureCategory.equals("Quit") || furnitureCategory.equals("quit")){
-            scanner.close();
             return false;
         }
         furnitureType = scanner.next();
         items = scanner.nextInt();
-        scanner.close();
         return true;
     }
 
@@ -96,19 +96,21 @@ public class UserInput extends DatabaseAccess{
     @params nothing
     @return nothing
     */
-    public void processRequest(){
+    public int processRequest(){
         PriceCalc calculation = new PriceCalc(getDburl(), getUsername(), getPassword());
         calculation.getTableFromDatabase();
+        return calculation.getPrice();
     }
 
+    private static UserInput initalizeConstructor(Scanner scanner){
+        return new UserInput(scanner.next(), scanner.next());
+    }
     public static void main(String[] args) {
-        System.out.println("\n * * * Lets Connect to Data Base! * * * \n");
-        System.out.println("please enter your database username and password"+
+        System.out.println("\n * * * Lets Connect to the INVENTORY Database! * * * \n");
+        System.out.println("Please enter your database username and password"+
         " separated by spaces");
         System.out.println("example: myname ensf409\n");
-        Scanner scanner = new Scanner(System.in);
-        UserInput startProgram = new UserInput(scanner.next(), scanner.next());
-        scanner.close();
+        UserInput startProgram = initalizeConstructor(new Scanner(System.in));
         boolean endProgram = true;
         while(true){
             switch(startProgram.displayMenu()){
