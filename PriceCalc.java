@@ -1,31 +1,33 @@
-
-/**
-@author Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
-@version 2.5
-@since 1.0
+/** 
+@author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
+Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
+Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
+Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucalgary.ca</a>
+@version 2.2
+@since  3.0
 */
 
-/*
- PriceCalc is a class which produces a formated order in a .txt file
- */
-
 //package edu.ucalgary.ensf409;
-
 import java.sql.*;
 
-public class PriceCalc extends DatabaseAccess{
-    public boolean fulfilled = false;
-    public static int cheapestPrice;
+/*
+ PriceCalc is a class which finds the cheapest combination of furniture items
+*/
+public class PriceCalc {
+    private boolean fulfilled = false;
+    public int cheapestPrice;
     public String[] itemCombination;
-    public ResultSet results;
     private String[] categories;
 	private String[] itemsAvailablePrice;
 	private String[] ID;
 	private String[][] typeAvailable;
-	private int numOfItems=0;
+	private int numOfItems = 0;
+    private UserInput programInfo;
+    private Connection dbConnect;
 
-    public PriceCalc(String DBURL, String USERNAME, String PASSWORD) {
-		super(DBURL, USERNAME, PASSWORD);
+    public PriceCalc(UserInput furnitureAndDatabase) {
+		programInfo = furnitureAndDatabase;
+        this.dbConnect = programInfo.database.getDBConnect();
     }
 
     public int getPrice(){
@@ -34,7 +36,7 @@ public class PriceCalc extends DatabaseAccess{
     public void getTableFromDatabase() { 
      
         try {
-            findCategories(UserInput.furnitureCategory);
+            findCategories(programInfo.getFurnitureCategory());
 
             int price  = Integer.parseInt(validCombinations(0));
             if( cheapestPrice > price ) {
@@ -43,17 +45,15 @@ public class PriceCalc extends DatabaseAccess{
 
             if(fulfilled){
                 cheapestPrice = 150;
-                OrderForm order= new OrderForm(getDburl(),getUsername(),getPassword());
+                OrderForm order= new OrderForm(programInfo);
                 order.createFile("OrderForm");
             } else{
-                UnfulfilledRequest checkClass = new UnfulfilledRequest(getUsername(),getPassword());
+                UnfulfilledRequest checkClass = new UnfulfilledRequest(programInfo);
                 checkClass.print();
-                checkClass.close();
             }
         } catch(NumberFormatException e){
-            UnfulfilledRequest checkClass = new UnfulfilledRequest(getUsername(),getPassword());
+            UnfulfilledRequest checkClass = new UnfulfilledRequest(programInfo);
             checkClass.print();
-            checkClass.close(); 
         }
      
     }
@@ -65,7 +65,7 @@ public class PriceCalc extends DatabaseAccess{
 
 	public void findCategories(String table) {
 		try {
-			   Statement st= getDBConnect().prepareStatement(table);
+			   Statement st= dbConnect.prepareStatement(table);
 			   ResultSet rs = st.executeQuery("SELECT * FROM "+table);
 			   
 			   ResultSetMetaData rsmd = rs.getMetaData();
@@ -82,7 +82,7 @@ public class PriceCalc extends DatabaseAccess{
 					}
 			   }
 			   
-               getItemsInCategories(table, UserInput.furnitureType);
+               getItemsInCategories(table, programInfo.getFurnitureType());
 			   st.close();
 		   }
 		   catch(SQLException e) {
@@ -95,7 +95,7 @@ public class PriceCalc extends DatabaseAccess{
 	public void getItemsInCategories(String table, String furnitureType ) {
 		
 		try {
-			Statement st= getDBConnect().prepareStatement(table);
+			Statement st= dbConnect.prepareStatement(table);
 			ResultSet rs = st.executeQuery("SELECT * FROM "+ table);
 		
 			while(rs.next()) {

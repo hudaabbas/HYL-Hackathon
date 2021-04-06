@@ -1,33 +1,45 @@
-/**
- * @author Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
- * @version 1.1
- * @since 1.0
+/** 
+@author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
+Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
+Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
+Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucalgary.ca</a>
+@version 2.2
+@since  3.0
 */
 
- /*
- OrderForm is a class which produces a formated order in a .txt file
- */
-
+//package edu.ucalgary.ensf409;
 import java.io.*;
 
-public class OrderForm extends DatabaseAccess{
-    private String totalPrice;
-    private String[] itemsOrdered = {"C0942,C9890"};
-    private String originalRequest;
+/*
+OrderForm is a class which extends PriceCalc and produces a formated order in a .txt file
+*/
 
-    //default constructor
-    public OrderForm(String DBURL, String USERNAME, String PASSWORD){
-        super(DBURL, USERNAME, PASSWORD);
-        this.originalRequest =  UserInput.furnitureCategory + " " + UserInput.furnitureType + ", " + String.valueOf(UserInput.items); //"standing desk, 3";
-        this.totalPrice = "$" + String.valueOf(PriceCalc.cheapestPrice);
-        //this.itemsOrdered = new String[2];
+public class OrderForm extends PriceCalc{
+    private String totalPrice;
+    private String[] itemsOrdered;
+    private String originalRequest;
+    private UserInput program;
+
+    /** This constructor extends PriceCalc to intialize private data members
+    @params UserInput programInfo for super constructor
+    */
+    public OrderForm(UserInput programInfo){
+        super(programInfo);
+        this.program = programInfo;
+        this.originalRequest =  programInfo.getFurnitureCategory() + " " + programInfo.getFurnitureType() + ", " + String.valueOf(programInfo.getItems()); 
+        this.totalPrice = "$" + String.valueOf(cheapestPrice);
+        this.itemsOrdered = itemCombination;
     }
 
+    /** This method creates a .txt file of the furniture order form, then calls class to update the inventory
+     * @params String of the file name to create
+     * @return nothing
+    */
     public void createFile(String fileName) {
         
         BufferedWriter outputStream = null;
         try{
-          outputStream = new BufferedWriter(new FileWriter(fileName + ".txt"));
+          outputStream = new BufferedWriter(new FileWriter(fileName + String.valueOf(program.requestNum) + ".txt"));
          
           outputStream.write("Furniture Order Form\n");
           outputStream.write("\n");
@@ -65,9 +77,8 @@ public class OrderForm extends DatabaseAccess{
           }
         }
     
-        UpdateInventory update = new UpdateInventory(getDburl(),getUsername(),getPassword());
-        update.setItemsOrdered(itemsOrdered);
-        update.removeItem(UserInput.furnitureCategory);
+        UpdateInventory update = new UpdateInventory(program.database.getDBConnect(), itemsOrdered);
+        update.removeItem(program.getFurnitureCategory());
 
       }
 }

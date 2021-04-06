@@ -10,5 +10,5 @@ Our application takes in a furniture category, type, and the number of items req
 ## Usage
 To compile the program use this command:
     javac -cp .:lib/mysql-connector-java-8.0.23.jar:. DatabaseAccess.java UserInput.java UnfulfilledRequest.java UpdateInventory.java OrderForm.java PriceCalc.java
-To run the program use this command and follow the prompts:
+To run the program use this command and follow the prompts in the terminal to enter your command line arguments:
     java -cp .:lib/mysql-connector-java-8.0.23.jar:. UserInput
