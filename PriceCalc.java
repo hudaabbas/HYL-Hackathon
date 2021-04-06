@@ -22,12 +22,14 @@ public class PriceCalc {
 	private String[] itemIds; //associate ID for an item
 	private String[][] typeAvailable; //Y N Y table
 	private int numOfItems = 0;
-    public int cheapestPrice;
-    public String[] itemCombination;
+    private int cheapestPrice;
+    private String[] itemCombination;
+    private int number;
 
     public PriceCalc(UserInput furnitureAndDatabase) {
 		programInfo = furnitureAndDatabase;
         this.dbConnect = programInfo.database.getDBConnect();
+        this.number = programInfo.getItems();
     }
 
     public int getPrice(){
@@ -37,11 +39,15 @@ public class PriceCalc {
     public void calculateThePrice() { 
         findCategories(programInfo.getFurnitureCategory());
 
-        int[] indexArr = {0};
-        findCombinations(indexArr);
+        for(int i = 0; i < numOfItems ; i++){
+            for(int j = 0; j < numOfItems ; j++){
+                int[] array = {i,j};
+                findCombinations(array);
+            }
+        }
 
         if(fulfilled){
-            OrderForm order= new OrderForm(programInfo);
+            OrderForm order= new OrderForm(programInfo, cheapestPrice, itemCombination);
             order.createFile("OrderForm");
         } else {
             UnfulfilledRequest checkClass = new UnfulfilledRequest(programInfo);
@@ -102,7 +108,7 @@ public class PriceCalc {
                     for (int j = 0; j < categories.length ; j++){
                         typeAvailable[i][j] = rf.getString(categories[j]);
                     }
-                i++;
+                    i++;
                 }   
     		}
 
@@ -126,8 +132,10 @@ public class PriceCalc {
     }
 
     public void findCombinations(int[] indexArr){
-        if(indexArr[0] >= numOfItems){
-            return;
+
+        for(int j = 0; j < indexArr.length; j++){
+            if(indexArr[j] >= numOfItems)
+                return;
         }
 
         for(int i = 0; i < indexArr.length; i++) {   //same element duplicated
@@ -153,9 +161,13 @@ public class PriceCalc {
         }
 
         if(comboFound(myitems)){
-            for(int i = 0; i < indexArr.length; i++){
-                System.out.print(indexArr[i]);
+            number--;
+
+            if(number > 0){
+                int[] array = {0,0};
+                findCombinations(array);
             }
+
             System.out.println();
             this.fulfilled = true;
             Integer price = 0;
@@ -164,9 +176,18 @@ public class PriceCalc {
                 price += Integer.parseInt(itemsAvailablePrice[indexArr[i]]);
             }
 
-            if(this.cheapestPrice > (int)price){
+            if(this.cheapestPrice == 0){
                 this.cheapestPrice = price;
                 int j = 0;
+                this.itemCombination = new String[indexArr.length];
+                for(int i = 0; i < indexArr.length; i++){  
+                    this.itemCombination[j] = itemIds[indexArr[i]];
+                    j++;
+                } 
+            } else if(this.cheapestPrice > price){
+                this.cheapestPrice = price;
+                int j = 0;
+                this.itemCombination = new String[indexArr.length];
                 for(int i = 0; i < indexArr.length; i++){
                     this.itemCombination[j] = itemIds[indexArr[i]];
                     j++;
@@ -174,11 +195,15 @@ public class PriceCalc {
             }   
         }
 
-        int[] items= new int[numOfItems];
-        for(int i = 0; i < numOfItems && i < indexArr.length ; i++){
-            items[i] = indexArr[i] + 1;
-            findCombinations(items);
+       /* int[] items= new int[numOfItems];
+        for(int i = 0; i < numOfItems ; i++){
+            for(int j = 0; j < numOfItems ; j++){
+                //items[i] = j;
+                int[] array = {i,j};
+                findCombinations(array);
+            }
         }
+        */
 
     }
 	

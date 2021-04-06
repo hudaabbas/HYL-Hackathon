@@ -7,7 +7,7 @@ Date:
 Original Request: Chair Mesh, 1
 
 Items Ordered
-ID: C9080
-ID: C83410
+ID: C0942
+ID: C9890
 
-Total Price: $190
+Total Price: $150
