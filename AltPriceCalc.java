@@ -18,9 +18,11 @@ public class AltPriceCalc extends DatabaseAccess{
     public ArrayList<ArrayList<String>> furnitures = new ArrayList<ArrayList<String>>();
     //public ArrayList<String> furnitureTypePrice = new ArrayList<String>();
     public ResultSet results;
+	UserInput programInfo;
 
-    public AltPriceCalc(String DBURL, String USERNAME, String PASSWORD) {
+    public AltPriceCalc(String DBURL, String USERNAME, String PASSWORD,UserInput furnitureAndDatabase) {
 		super(DBURL, USERNAME, PASSWORD);
+		this.programInfo = furnitureAndDatabase; 
     }
 
 
@@ -69,11 +71,11 @@ public class AltPriceCalc extends DatabaseAccess{
 
         try {
             Statement myStmt = getDBConnect().createStatement();
-            results = myStmt.executeQuery("SELECT * FROM " + UserInput.furnitureCategory);
+            results = myStmt.executeQuery("SELECT * FROM " + programInfo.getFurnitureCategory());
 
             while(results.next()){
-                if(results.getString("Type").equals(UserInput.furnitureType)){
-					if(UserInput.furnitureCategory.equals("Lamp")){
+                if(results.getString("Type").equals(programInfo.getFurnitureType())){
+					if(programInfo.getFurnitureCategory().equals("Lamp")){
 						int price = results.getInt("Price");
 						String id = results.getString("ID");
 						String type = results.getString("Type");
@@ -82,7 +84,7 @@ public class AltPriceCalc extends DatabaseAccess{
 						furnitures.add(makeArrayList(price, id, type, boolOne, boolTwo));
 						numberOfElements++;
 					}
-					if(UserInput.furnitureCategory.equals("Desk")){
+					if(programInfo.getFurnitureCategory().equals("Desk")){
 						int price = results.getInt("Price");
 						String id = results.getString("ID");
 						String type = results.getString("Type");
@@ -92,7 +94,7 @@ public class AltPriceCalc extends DatabaseAccess{
 						furnitures.add(makeArrayList(price, id, type, boolOne, boolTwo, boolThree));
 						numberOfElements++;
 					}
-					if(UserInput.furnitureCategory.equals("Filing")){
+					if(programInfo.getFurnitureCategory().equals("Filing")){
 						int price = results.getInt("Price");
 						String id = results.getString("ID");
 						String type = results.getString("Type");
@@ -102,7 +104,7 @@ public class AltPriceCalc extends DatabaseAccess{
 						furnitures.add(makeArrayList(price, id, type, boolOne, boolTwo, boolThree));
 						numberOfElements++;
 					}
-					if(UserInput.furnitureCategory.equals("Chair")){
+					if(programInfo.getFurnitureCategory().equals("Chair")){
 						int price = results.getInt("Price");
 						String id = results.getString("ID");
 						String type = results.getString("Type");
