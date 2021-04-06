@@ -70,7 +70,6 @@ public class UserInput {
         }
         Scanner scanned = new Scanner(System.in);
         boolean continueProg = takeRequest(scanned);
-        scanned.close();
         if(initiatedConnection && continueProg){
             if(correctNameOfObject()){
                 this.requestNum++;
@@ -122,7 +121,7 @@ public class UserInput {
     */
     public static int processRequest(UserInput program){
         PriceCalc calculation = new PriceCalc(program);
-        calculation.getTableFromDatabase();
+        calculation.calculateThePrice();
         return calculation.getPrice();
     }
 

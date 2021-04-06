@@ -39,7 +39,7 @@ public class OrderForm extends PriceCalc{
         
         BufferedWriter outputStream = null;
         try{
-          outputStream = new BufferedWriter(new FileWriter(fileName + String.valueOf(program.requestNum) + ".txt"));
+          outputStream = new BufferedWriter(new FileWriter(fileName + String.valueOf(program.requestNum - 1) + ".txt"));
          
           outputStream.write("Furniture Order Form\n");
           outputStream.write("\n");
