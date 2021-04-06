@@ -40,8 +40,8 @@ public class UpdateInventory {
 			   
 			   st.setString(1, itemsOrdered[i]);
 			
-			   int rows=st.executeUpdate();
-			   System.out.println("Rows updated: "+rows);
+			   st.executeUpdate();
+			   //System.out.println("Rows updated: "+rows);
 			   
 			   st.close();
 			}

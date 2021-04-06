@@ -14,21 +14,19 @@ import java.io.*;
 OrderForm is a class which extends PriceCalc and produces a formated order in a .txt file
 */
 
-public class OrderForm extends PriceCalc{
+public class OrderForm {
     private String totalPrice;
-    private String[] itemsOrdered;
     private String originalRequest;
     private UserInput program;
-
+    private String[] itemsOrdered;
     /** This constructor extends PriceCalc to intialize private data members
     @params UserInput programInfo for super constructor
     */
-    public OrderForm(UserInput programInfo){
-        super(programInfo);
+    public OrderForm(UserInput programInfo, int cheapestPrice, String[] itemCombo){
         this.program = programInfo;
         this.originalRequest =  programInfo.getFurnitureCategory() + " " + programInfo.getFurnitureType() + ", " + String.valueOf(programInfo.getItems()); 
         this.totalPrice = "$" + String.valueOf(cheapestPrice);
-        this.itemsOrdered = itemCombination;
+        this.itemsOrdered = itemCombo;
     }
 
     /** This method creates a .txt file of the furniture order form, then calls class to update the inventory
@@ -39,7 +37,7 @@ public class OrderForm extends PriceCalc{
         
         BufferedWriter outputStream = null;
         try{
-          outputStream = new BufferedWriter(new FileWriter(fileName + String.valueOf(program.requestNum) + ".txt"));
+          outputStream = new BufferedWriter(new FileWriter(fileName + String.valueOf(program.requestNum - 1) + ".txt"));
          
           outputStream.write("Furniture Order Form\n");
           outputStream.write("\n");
@@ -54,7 +52,8 @@ public class OrderForm extends PriceCalc{
           outputStream.write("\n");
           outputStream.newLine();
           outputStream.write("Items Ordered\n");
-          for(int i = 0; i<itemsOrdered.length; i++){
+
+          for(int i = 0; i < itemsOrdered.length; i++){ 
             outputStream.write("ID: " + itemsOrdered[i]);
             outputStream.newLine();
           }

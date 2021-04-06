@@ -70,13 +70,13 @@ public class UnfulfilledRequest{
             while(results.next()){
                 if(results.getString("Type").equals(program.getFurnitureType())){
                     boolean add = true;
-                    for(int i = 0; i<count; i++){
-                        if(manuID.get(count) == results.getString("ManuID")){
+                    for(int i = 0; i < count; i++){
+                        if(manuID.get(i) == results.getString("ManuID")){
                             add = false;
                         }
                     }
                     if(add){
-                        manuID.add(count,results.getString("ManuID"));
+                        manuID.add(count, results.getString("ManuID") );
                         count++;
                     }
                 }
