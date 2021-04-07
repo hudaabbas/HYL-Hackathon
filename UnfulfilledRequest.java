@@ -1,4 +1,4 @@
-/** 
+/**
 @author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
 Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
 Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
@@ -12,7 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /*
- UnfulfilledRequest prints a list of manufuactures to the terminal 
+ UnfulfilledRequest prints a list of manufuactures to the terminal
  when the furniture combination is not possible
 */
 public class UnfulfilledRequest{
@@ -35,7 +35,7 @@ public class UnfulfilledRequest{
     @return the manufacturers name in a string array
     */
     public ArrayList<String> searchDBManufacture(){
-        ArrayList<String> manuFound = new ArrayList<String>(); 
+        ArrayList<String> manuFound = new ArrayList<String>();
         ArrayList<String> manuID = findIDForPrint();
         try{
             Statement myStmt = program.database.getDBConnect().createStatement();
@@ -56,36 +56,62 @@ public class UnfulfilledRequest{
         return manuFound;
     }
 
-    /** This method goes through the database and looks for a furniture object with the
-    given type.
+    /** This method is hardcoded to return the IDs of manufacturers depending on
+    given furniture type and category.
+    We chose to hardcode the information because some methods delete entries
+    in the database, and searching for an ID based on currently available
+    entries will result in errors.
     @params nothing
     @return the manufacturers' ID in a string array
     */
-    public ArrayList<String> findIDForPrint(){
+    public ArrayList<String> makeIDArrayLists(){
         ArrayList<String> manuID = new ArrayList<String>();
-        int count = 0;
-        try{
-            Statement myStmt = program.database.getDBConnect().createStatement();
-            results = myStmt.executeQuery("SELECT * FROM "+ program.getFurnitureCategory());
-            while(results.next()){
-                if(results.getString("Type").equals(program.getFurnitureType())){
-                    boolean add = true;
-                    for(int i = 0; i < count; i++){
-                        if(manuID.get(i) == results.getString("ManuID")){
-                            add = false;
-                        }
-                    }
-                    if(add){
-                        manuID.add(count, results.getString("ManuID") );
-                        count++;
-                    }
-                }
-            }
-            myStmt.close();
+        String category = program.getFurnitureCategory();
+        String type = program.getFurnitureType();
+
+        if(category.equals("Filing") || type.equals("Desk")){
+            manuID.add("002");
+            manuID.add("004");
+            manuID.add("005");
         }
-        catch (SQLException ex) {
-            ex.printStackTrace();
+        else if(type.equals("Task") || type.equals("Ergonomic")){
+            manuID.add("002");
+            manuID.add("003");
         }
+        else if(type.equals("Kneeling") || type.equals("Swing Arm")){
+            manuID.add("002");
+            manuID.add("005");
+        }
+        else if(type.equals("Mesh")){
+            manuID.add("003");
+            manuID.add("005");
+        }
+        else if(type.equals("Executive")){
+            manuID.add("002");
+            manuID.add("004");
+        }
+        else if(type.equals("Study")){
+            manuID.add("002");
+            manuID.add("003");
+            manuID.add("005");
+        }
+        else if(type.equals("Traditional")){
+            manuID.add("001");
+            manuID.add("002");
+            manuID.add("005");
+        }
+        else if(type.equals("Adjustable")){
+            manuID.add("001");
+            manuID.add("002");
+            manuID.add("004");
+            manuID.add("005");
+        }
+        else if(type.equals("Standing")){
+            manuID.add("001");
+            manuID.add("004");
+            manuID.add("005");
+        }
+
         return manuID;
     }
 
