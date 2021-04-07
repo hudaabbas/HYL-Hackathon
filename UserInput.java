@@ -86,10 +86,10 @@ public class UserInput {
             return 3;
         }
         System.out.println("wrong input given");
-        return 0; // weird name was added to the furniture category
+        return 0;
     }
 
-    /** This method checks if a correct furniture name was read.
+    /** This method checks if a correct furniture category was read.
     @params nothing
     @return true if correct, false if incorrect
     */
@@ -125,7 +125,9 @@ public class UserInput {
         return false;
     }
 
-    /** This method takes the request by reading from the command line using a scanner
+    /** This method takes the request by reading from the command line using a scanner.
+    This method can detect negative input of items, furniture types that up to
+    2 words long. It does not handle user input that does not follow the instructions.
     @params nothing
     @return default is true, false if user wants to quit
     */
@@ -176,8 +178,9 @@ public class UserInput {
         return new UserInput(scanner.next(), scanner.next());
     }
 
-    /** This accepts different tests for the program and calls the resulting classes to fulfill a users furniture request
-     * Instructions for running and using this program is in README.md
+    /** This accepts different tests for the program and calls the appropriate
+    classes to fulfill a furniture request.
+    Instructions for running and using this program is in README.md
     @params args command line arguemnts (not in use, optional)
     @return returns the new instantiation of the UserInput class using the command line
     */
