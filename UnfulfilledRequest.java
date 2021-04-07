@@ -30,7 +30,9 @@ public class UnfulfilledRequest{
     }
 
     /** This method goes through the database and looks for the name of
-    manufacturers based on the IDs found by findIDForPRint()
+    manufacturers based on the IDs found by makeIDArrayLists().
+    This method is used by the constructor and it initializes the array list
+    field.
     @params nothing
     @return the manufacturers name in a string array
     */
@@ -61,6 +63,8 @@ public class UnfulfilledRequest{
     We chose to hardcode the information because some methods delete entries
     in the database, and searching for an ID based on currently available
     entries will result in errors.
+    Although this makes a new array list every time it is called, it is much
+    faster than going through the database itself.
     @params nothing
     @return the manufacturers' ID in a string array
     */
