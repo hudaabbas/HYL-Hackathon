@@ -1,63 +1,82 @@
-//package edu.ucalgary.ensf409;
+/** 
+@author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
+Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
+Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
+Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucalgary.ca</a>
+@version 2.2
+@since  2.0
+*/
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+//package edu.ucalgary.ensf409;
+import java.sql.*;
 
 /**
- @author Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
- @version 1.0
- @since 1.0
-  * DatabaseAccess.java accesses and updates the SQL inventory database. It has data members DBURL to specify
+  * DatabaseAccess is a class that accesses and updates the SQL inventory database. It has data members DBURL to specify
   * which database is being accessed, USERNAME to specific username of user, PASSWORD and dbConnect
   * to establish a connection to the database.
- **/
-public class DatabaseAccess {
-    public final String DBURL; //store the database url information, no setters
-    public final String USERNAME; //store the user's account username
-    public final String PASSWORD; //store the user's account password
-    private Connection dbConnect; //connection data member to establish connection to interact with database
+**/
 
+public class DatabaseAccess {
+    private final String DBURL; //store the database url information, no setters
+    private final String USERNAME; //store the user's account username
+    private final String PASSWORD; //store the user's account password
+    private static Connection dbConnect; //connection data member to establish connection to interact with database
+
+    /**
+     * Constructor for DatabaseAccess, sets username, dburl and password
+     * @params the database url for database connection
+     * @params the username for the database connection
+     * @params the password for the database connection 
+     * 
+    */
     DatabaseAccess(String DBURL, String USERNAME, String PASSWORD){
-        /**
-         * Constructor for DatabaseAccess, not using database.
-         */
-        /**
-         @param args //command line argument for accessing inventory database, requires user input of password, dburl and username
-         */
         this.DBURL = DBURL;
         this.USERNAME = USERNAME;
         this.PASSWORD = PASSWORD;
     }
+
+    /**
+     * Getter method for data member database url
+     * @params nothing
+     * @return String value of DBURL
+    */
     public String getDburl() {
-        /**
-         * Getter method for data member DBURL, does not use database.
-         */
         return this.DBURL;
     }
 
+    /**
+     * Getter method for data member USERNAME
+     * @params nothing
+     * @return String value of USERNAME
+    */
     public String getUsername() {
-        /**
-         * Getter method for data member USERNAME, does not use database.
-         */
         return this.USERNAME;
     }
 
+    /**
+     * Getter method for data member PASSWORD
+     * @params nothing
+     * @return String value of PASSWORD
+    */
     public String getPassword() {
-        /**
-         * Getter method for data member PASSWORD, does not use database.
-         */
         return this.PASSWORD;
     }
 
+    /**
+     * Getter method for database connection 
+     * @params nothing
+     * @return Connection value of dbConnect
+    */
     public Connection getDBConnect(){
-        return this.dbConnect;
+        return dbConnect;
     }
 
+    /**
+     * initializeConnection creates a connection with the SQL database inventory.
+     * @params nothing
+     * @return true if connection succesful, false if database connection fails
+    */
     public boolean initializeConnection() {
-        /**
-         * initializeConnection creates a connection with the SQL database inventory.
-         */
         try { //need to have try and catch in the case the program fails to make connection with database
             dbConnect = DriverManager.getConnection(this.DBURL, this.USERNAME, this.PASSWORD);
         } catch (SQLException e) {
@@ -67,11 +86,12 @@ public class DatabaseAccess {
         return true;
     }
 
-    public void close () {
-        /**
-         * close is a method that closes the Connection when all methods are
-         * run and executed.
-         */
+    /**
+     * close is a method that closes the Connection when all methods are run and executed.
+     * @params nothing
+     * @return nothing
+    */
+    public void close() {
         try {
             dbConnect.close();
         } catch (SQLException e) {
