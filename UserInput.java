@@ -99,7 +99,7 @@ public class UserInput {
     @params nothing
     @return default is true, false if user wants to quit
     */
-    private boolean takeRequest(Scanner scanner){
+    public boolean takeRequest(Scanner scanner){
         System.out.println("\n * * * Taking Request #"+ requestNum + " * * * \n");
         System.out.println("Please enter your furniture request in the form of 'Category' 'Type' '#'"+
         " with the first letter capitalized, separated by spaces and with no quotations");
@@ -119,10 +119,9 @@ public class UserInput {
     @params UserInput class input
     @return returns the lowest price combo calculated
     */
-    public static int processRequest(UserInput program){
+    public static void processRequest(UserInput program){
         PriceCalc calculation = new PriceCalc(program);
         calculation.calculateThePrice();
-        return calculation.getPrice();
     }
 
     /** This method initiliazes the database by using the command line and UserInput constructor

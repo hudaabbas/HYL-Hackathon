@@ -36,6 +36,10 @@ public class PriceCalc {
         return cheapestPrice;
     }
 
+    public String[] getItemCombination(){
+        return itemCombination;
+    }
+
     public void calculateThePrice() { 
         findCategories(programInfo.getFurnitureCategory());
 
