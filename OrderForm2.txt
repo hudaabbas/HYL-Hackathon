@@ -4,10 +4,11 @@ Faculty Name:
 Contact:
 Date:
 
-Original Request: Desk Adjustable, 1
+Original Request: Desk Standing, 2
 
 Items Ordered
-ID: D4475
-ID: D5437
+ID: D1927
+ID: D4438
+ID: D9387
 
-Total Price: $250
+Total Price: $600

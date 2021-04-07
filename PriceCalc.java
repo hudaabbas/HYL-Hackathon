@@ -39,13 +39,18 @@ public class PriceCalc {
     public void calculateThePrice() { 
         findCategories(programInfo.getFurnitureCategory());
 
-        for(int i = 0; i < numOfItems ; i++){
-            for(int j = 0; j < numOfItems ; j++){
-                int[] array = {i,j};
-                findCombinations(array);
-            }
+        int[] array = new int[numOfItems];
+        for(int i = 0; i < numOfItems; i++){
+            array[i] = i;
         }
 
+        int n = 2;
+        while( n <= numOfItems){
+            int[] data = new int[n];
+            allCombinations(array, data, 0, array.length-1, 0, n);
+            n++;
+        }  
+        
         if(fulfilled){
             OrderForm order= new OrderForm(programInfo, cheapestPrice, itemCombination);
             order.createFile("OrderForm");
@@ -122,53 +127,67 @@ public class PriceCalc {
 	
 	}
 
-    public boolean comboFound(String[] myitems){
-        for(int i = 0; i < myitems.length; i++){
-            if(myitems[i].equals("N")){ //not equal to Y
-                return false;
-            } 
+    /* arr[]  ---> Input Array
+    data[] ---> Temporary array to store current combination
+    start & end ---> Staring and Ending indexes in arr[]
+    index  ---> Current index in data[]
+    r ---> Size of a combination to be printed 
+    */
+    public void allCombinations(int arr[], int data[], int start,
+                                int end, int index, int r)
+    {
+        // Current combination is ready to be printed, print it
+        if (index == r) {
+            findCombinations(data);
+            return;
         }
-        return true;
+ 
+        // replace index with all possible elements. The condition
+        // "end-i+1 >= r-index" makes sure that including one element
+        // at index will make a combination with remaining elements
+        // at remaining positions
+        for (int i=start; i<=end && end-i+1 >= r-index; i++)
+        {
+            data[index] = arr[i];
+            allCombinations(arr, data, i+1, end, index+1, r);
+        }
+
     }
 
     public void findCombinations(int[] indexArr){
-
         for(int j = 0; j < indexArr.length; j++){
             if(indexArr[j] >= numOfItems)
                 return;
         }
 
-        for(int i = 0; i < indexArr.length; i++) {   //same element duplicated
+        for(int i = 0; i < indexArr.length; i++) {   
             for(int j = i + 1; j < indexArr.length; j++) {  
-                if(indexArr[i] == indexArr[j]){ 
+                if(indexArr[i] == indexArr[j]){  //same element duplicated
                     return;  
                 }
             }  
         }  
 
-        String myitems[] = new String[categories.length];
+        String myitems[][] = new String[number][categories.length];
 
-        for(int def = 0; def < myitems.length; def++){
-            myitems[def] = "N";
+        for(int num = 0; num < number; num++){
+            for(int cat = 0; cat < myitems[0].length; cat++){
+                myitems[num][cat] = "N";
+            }
         }
       
         for(int j = 0; j < indexArr.length; j++){
-            for(int category = 0; category < myitems.length; category++){
-                if(myitems[category].equals("N")){
-                    myitems[category] = typeAvailable[indexArr[j]][category];
+            for(int category = 0; category < myitems[0].length; category++){
+                for(int num = 0; num < number; num++){ //go down the category to fulfill other orders
+                    if(myitems[num][category].equals("N")){
+                        myitems[num][category] = typeAvailable[indexArr[j]][category];
+                        break;
+                    }
                 }
             }
         }
 
         if(comboFound(myitems)){
-            number--;
-
-            if(number > 0){
-                int[] array = {0,0};
-                findCombinations(array);
-            }
-
-            System.out.println();
             this.fulfilled = true;
             Integer price = 0;
 
@@ -194,18 +213,18 @@ public class PriceCalc {
                 } 
             }   
         }
+       
+    }
 
-       /* int[] items= new int[numOfItems];
-        for(int i = 0; i < numOfItems ; i++){
-            for(int j = 0; j < numOfItems ; j++){
-                //items[i] = j;
-                int[] array = {i,j};
-                findCombinations(array);
+    public boolean comboFound(String[][] myitems){
+        for(int items = 0; items < number; items++){
+            for(int i = 0; i < myitems[0].length; i++){
+                if(myitems[items][i].equals("N")){ //not equal to Y
+                    return false;
+                } 
             }
         }
-        */
-
+        return true;
     }
 	
 }
-
