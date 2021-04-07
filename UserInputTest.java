@@ -79,7 +79,7 @@ public class UserInputTest{
     testObj.takeRequest(args);
     PriceCalc priceObj = new PriceCalc(testObj);
     priceObj.calculateThePrice();
-    int priceCalc = priceObj.getPrice();
+    int priceCalc = priceObj.getCheapestPrice();
     int  expected = 150;
     assertTrue("Cheapest price is wrong", priceCalc == expected);
   }
