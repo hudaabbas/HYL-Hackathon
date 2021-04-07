@@ -10,8 +10,9 @@ Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucal
 //package edu.ucalgary.ensf409;
 import java.io.*;
 
-/*
-OrderForm is a class which extends PriceCalc and produces a formated order in a .txt file
+/**
+ * OrderForm is a class which produces a formated order in a .txt file 
+ * using the calculated price, original request and ID numbers of the items ordered
 */
 
 public class OrderForm {
@@ -19,8 +20,11 @@ public class OrderForm {
     private String originalRequest;
     private UserInput program;
     private String[] itemsOrdered;
-    /** This constructor extends PriceCalc to intialize private data members
-    @params UserInput programInfo for super constructor
+
+    /** This constructor intializes private data members using the PriceCalc class inputs of the price and IDs of the items ordered
+    @params UserInput class input for the original request info
+    @params integer of cheapestPrice calculated by priceCalc
+    @params String array of the ID numbers of the items ordered that match the furniture request
     */
     public OrderForm(UserInput programInfo, int cheapestPrice, String[] itemCombo){
         this.program = programInfo;
@@ -62,9 +66,9 @@ public class OrderForm {
           outputStream.flush();
 
         } catch(FileNotFoundException e){
-            System.out.println("File not found when trying to write to " + fileName + ".txt");
+            System.out.println("File not found when trying to write to " + fileName + String.valueOf(program.requestNum - 1) + ".txt");
         } catch(IOException e){
-            System.out.println("I/O exception when trying to write to " + fileName + ".txt");
+            System.out.println("I/O exception when trying to write to " + fileName + String.valueOf(program.requestNum - 1) + ".txt");
             e.printStackTrace();
         } finally {
           if (outputStream != null){
@@ -75,7 +79,8 @@ public class OrderForm {
             }
           }
         }
-    
+
+         //calls the method which deletes the used ID's from the inventory database
         UpdateInventory update = new UpdateInventory(program.database.getDBConnect(), itemsOrdered);
         update.removeItem(program.getFurnitureCategory());
 

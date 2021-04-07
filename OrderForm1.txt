@@ -4,10 +4,11 @@ Faculty Name:
 Contact:
 Date:
 
-Original Request: Desk Standing, 1
+Original Request: Filing Small, 2
 
 Items Ordered
-ID: D1927
-ID: D2341
+ID: F001
+ID: F004
+ID: F005
 
-Total Price: $300
+Total Price: $200
