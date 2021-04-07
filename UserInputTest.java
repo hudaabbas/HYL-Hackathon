@@ -10,22 +10,108 @@ Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucal
 //package edu.ucalgary.ensf409;
 import static org.junit.Assert.*;
 import org.junit.*;
+import java.sql.*;
+import java.io.*;
+import java.util.Scanner;
+import java.util.ArrayList;
 //import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 /** UserInputTest is a class that tests the UserInput class and its methods
+ * Tests must be run against the expected given INVENTORY database to work 
 */
 
 public class UserInputTest{
     
   @Test
-  // Constructor created with 2 arguments
-  public void testConstructor() {
-    UserInput testObj = new UserInput("huda","ensf409");
-    //String args[] = {"Chair","Mesh","1"};
-    int test = UserInput.processRequest(testObj);
-    int priceCalc = 150;
-   // String[] itemsOrdered = {"C0942,C9890"};
-    assertTrue("Cheapest price is wrong", priceCalc == test);
+  // to confirm initializtion/close methods are all working
+  public void testDBConnect() {
+    DatabaseAccess testObj = new DatabaseAccess("jdbc:mysql://localhost/inventory","scm","ensf409");
+    boolean test = testObj.initializeConnection();
+    try{
+      testObj.close();
+      if(test == testObj.getDBConnect().isClosed()){
+          test = false;
+      }
+    } catch (SQLException e){
+        test = false;
+    }
+
+    assertTrue("Furniture category is wrong", test);
   }
+
+  @Test
+  // Constructor created with 2 arguments
+  public void testFurnitureOrderInputCategory() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    Scanner args = new Scanner(System.in);
+    testObj.takeRequest(args);
+    String expected = "Chair";
+    String category = testObj.getFurnitureCategory();
+    
+    assertTrue("Furniture category is wrong", expected.equals(category));
+  }
+
+  @Test
+  public void testFurnitureOrderInputItems() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    Scanner args = new Scanner(System.in);
+    testObj.takeRequest(args);
+    int expected = 5;
+    int item = testObj.getItems();
+   
+    assertTrue("Number of furniture items is wrong", expected == item);
+  }
+
+  @Test
+  public void testFurnitureOrderInputType() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    Scanner args = new Scanner(System.in);
+    testObj.takeRequest(args);
+    String expected = "Chair";
+    String type = testObj.getFurnitureType();
+   
+    assertTrue("Furniture type is wrong", expected.equals(type));
+  }
+
+  public void testCheapestPriceOutput() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    Scanner args = new Scanner(System.in);
+    testObj.takeRequest(args);
+    PriceCalc priceObj = new PriceCalc(testObj);
+    priceObj.calculateThePrice();
+    int priceCalc = priceObj.getPrice();
+    int  expected = 150;
+    assertTrue("Cheapest price is wrong", priceCalc == expected);
+  }
+
+  @Test
+  public void testItemsOrdered() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    Scanner args = new Scanner(System.in);
+    testObj.takeRequest(args);
+    PriceCalc priceObj = new PriceCalc(testObj);
+    priceObj.calculateThePrice();
+    String[] itemCombo = priceObj.getItemCombination();
+    String[] itemsOrderedExpected = {"C0942,C9890"};
+    boolean test = true;
+    for(int i = 0; i < itemCombo.length; i++){
+      if(itemsOrderedExpected[i] != itemCombo[i]){
+        test = false;
+      }
+    }
+    assertTrue("Item combo is wrong", test);
+  }
+
+  @Test
+  public void testNegItems() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    Scanner args = new Scanner(System.in);
+    testObj.takeRequest(args);
+    int item = testObj.getItems();
+    
+    assertTrue("Item combo is wrong", item == 0);
+  }
+
+  //need to add more BOUNDARY CASES and EXCEPTION HANDLING!! also above dont work
 
 }
