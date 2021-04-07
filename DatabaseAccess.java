@@ -5,19 +5,13 @@ Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
 Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucalgary.ca</a>
 @version 2.2
 @since  2.0
+  * DatabaseAccess.java accesses and updates the SQL inventory database. It has data members DBURL to specify
+  * which database is being accessed, USERNAME to specific username of user, PASSWORD and dbConnect
+  * to establish a connection to the database.
 */
 
 //package edu.ucalgary.ensf409;
 import java.sql.*;
-
-/**
- @author Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
- @version 1.3
- @since 1.0
-  * DatabaseAccess.java accesses and updates the SQL inventory database. It has data members DBURL to specify
-  * which database is being accessed, USERNAME to specific username of user, PASSWORD and dbConnect
-  * to establish a connection to the database.
-**/
 
 public class DatabaseAccess {
     private final String DBURL; //store the database url information, no setters
