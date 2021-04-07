@@ -1,4 +1,4 @@
-/** 
+/**
 @author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
 Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
 Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
@@ -9,6 +9,7 @@ Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucal
 
 //package edu.ucalgary.ensf409;
 import java.util.Scanner;
+import java.util.*;
 
 /** UserInput is the main class which extends Database Access and handles all of the user input
 using a switch statement
@@ -20,6 +21,11 @@ public class UserInput {
     public int requestNum;
     public DatabaseAccess database;
     private boolean initiatedConnection;
+
+    private String [] chairTypes = {"Task", "Mesh", "Kneeling", "Ergonomic", "Executive"};
+    private String [] lampTypes = {"Desk", "Swing Arm", "Study"};
+    private String [] deskTypes = {"Traditional", "Adjustable", "Standing"};
+    private String [] filingTypes = {"Small", "Medium", "Large"};
 
     /** This constructor calls the Database constructor to initialize the connection
     @params the username for the database connection
@@ -71,7 +77,7 @@ public class UserInput {
         Scanner scanned = new Scanner(System.in);
         boolean continueProg = takeRequest(scanned);
         if(initiatedConnection && continueProg){
-            if(correctNameOfObject()){
+            if(correctNameOfObject() && correctTypeOfObject() && items>0){
                 this.requestNum++;
                 return 2;
             }
@@ -95,6 +101,30 @@ public class UserInput {
         return false;
     }
 
+    /** This method checks if a correct furniture type was read, depending on furniture kind
+    @params nothing
+    @return true if correct, false if incorrect
+    */
+    public boolean correctTypeOfObject(){
+        if(furnitureCategory.equals("Chair")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(chairTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        else if (furnitureCategory.equals("Desk")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(deskTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        else if(furnitureCategory.equals("Filing")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(filingTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        else if (furnitureCategory.equals("Lamp")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(lampTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        return false;
+    }
+
     /** This method takes the request by reading from the command line using a scanner
     @params nothing
     @return default is true, false if user wants to quit
@@ -105,13 +135,26 @@ public class UserInput {
         " with the first letter capitalized, separated by spaces and with no quotations");
         System.out.println("example: Chair Mesh 1");
         System.out.println("or write Quit to terminate program\n");
-        
+
         furnitureCategory = scanner.next();
         if(furnitureCategory.equals("Quit") || furnitureCategory.equals("quit")){
             return false;
         }
         furnitureType = scanner.next();
-        items = scanner.nextInt();
+        String possibleItems = scanner.next();
+        boolean onlyThree = false;
+        if(possibleItems.charAt(0) <= 57 && possibleItems.charAt(0) >= 48){
+            items = Integer.parseInt(possibleItems);
+            return true;
+        }
+        if(possibleItems.charAt(0) == '-'){
+            items = -10;
+            return true;
+        }
+        furnitureType+=" ";
+        furnitureType+=possibleItems;
+        items = Integer.parseInt(scanner.next());
+
         return true;
     }
 

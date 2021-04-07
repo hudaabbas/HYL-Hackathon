@@ -47,7 +47,7 @@ public class UpdateInventory {
 			}
 		   }
 		   catch(SQLException e) {
-			   System.out.println("Error, unable to delete teacher");
+			   System.out.println("Error, unable to delete table");
 		   }
 	}
 }
