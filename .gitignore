@@ -1,4 +1,5 @@
 edu/ucalgary/ensf409/DatabaseAccess.class
+edu/ucalgary/ensf409/UpdateInventory.class
 edu/ucalgary/ensf409/OrderForm.class
 edu/ucalgary/ensf409/PriceCalc.class
 edu/ucalgary/ensf409/UnfulfilledRequest.class
