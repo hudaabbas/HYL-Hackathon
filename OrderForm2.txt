@@ -4,11 +4,11 @@ Faculty Name:
 Contact:
 Date:
 
-Original Request: Desk Standing, 2
+Original Request: Chair Executive, 1
 
 Items Ordered
-ID: D1927
-ID: D4438
-ID: D9387
+ID: C2483
+ID: C5784
+ID: C7268
 
-Total Price: $600
+Total Price: $400

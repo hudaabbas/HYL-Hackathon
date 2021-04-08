@@ -209,7 +209,7 @@ public class UserInput {
             }
         if(endProgram == false) break;
         }
-
+        //somehow call UpdateInventory reset?
         startProgram.database.close(); //close database connection at end
     }
 }
