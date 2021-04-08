@@ -1,4 +1,4 @@
-/** 
+/**
 @author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
 Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
 Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 //import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 /** UserInputTest is a class that tests the UserInput class and its methods
- * Tests must be run against the expected given INVENTORY database to work 
+ * Tests must be run against the expected given INVENTORY database to work
 */
 
 public class UserInputTest{
-    
+
   @Test
   // to confirm initializtion/close methods are all working
   public void testDBConnect() {
@@ -30,7 +30,7 @@ public class UserInputTest{
     try{
       testObj.close();
       if(test == testObj.getDBConnect().isClosed()){
-          test = false;
+          test = false; //shouldnt this be =true?
       }
     } catch (SQLException e){
         test = false;
@@ -47,32 +47,33 @@ public class UserInputTest{
     testObj.takeRequest(args);
     String expected = "Chair";
     String category = testObj.getFurnitureCategory();
-    
+
     assertTrue("Furniture category is wrong", expected.equals(category));
   }
 
-  @Test
+  @Test //Testing where input # of items is 5
   public void testFurnitureOrderInputItems() {
     UserInput testObj = new UserInput("scm","ensf409");
     Scanner args = new Scanner(System.in);
     testObj.takeRequest(args);
     int expected = 5;
     int item = testObj.getItems();
-   
+
     assertTrue("Number of furniture items is wrong", expected == item);
   }
 
-  @Test
+  @Test //Testing where input type of furniture is MESH, category should be chair
   public void testFurnitureOrderInputType() {
     UserInput testObj = new UserInput("scm","ensf409");
     Scanner args = new Scanner(System.in);
     testObj.takeRequest(args);
-    String expected = "Chair";
+    String expected = "Mesh";
     String type = testObj.getFurnitureType();
-   
+
     assertTrue("Furniture type is wrong", expected.equals(type));
   }
 
+  @Test
   public void testCheapestPriceOutput() {
     UserInput testObj = new UserInput("scm","ensf409");
     Scanner args = new Scanner(System.in);
@@ -108,7 +109,7 @@ public class UserInputTest{
     Scanner args = new Scanner(System.in);
     testObj.takeRequest(args);
     int item = testObj.getItems();
-    
+
     assertTrue("Item combo is wrong", item == 0);
   }
 

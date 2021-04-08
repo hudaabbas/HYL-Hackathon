@@ -20,6 +20,7 @@ public class UnfulfilledRequest{
     private int numOfManufacturers;
     private ResultSet results;
     private UserInput program;
+    private boolean firstRequest;
 
     /** This constructor sets the UserInput data member and calls method to search the manufactures list
     @params UserInput programinfo with database and furniture info in its datamembers
@@ -27,16 +28,19 @@ public class UnfulfilledRequest{
     public UnfulfilledRequest(UserInput programInfo){
         this.program = programInfo;
         this.manufacturers = searchDBManufacture();
+        this.manuID = makeIDArrayLists();
     }
 
     /** This method goes through the database and looks for the name of
-    manufacturers based on the IDs found by findIDForPRint()
+    manufacturers based on the IDs found by makeIDArrayLists().
+    This method is used by the constructor and it initializes the array list
+    field.
     @params nothing
     @return the manufacturers name in a string array
     */
     public ArrayList<String> searchDBManufacture(){
         ArrayList<String> manuFound = new ArrayList<String>();
-        ArrayList<String> manuID = findIDForPrint();
+        ArrayList<String> manuID = makeIDArrayLists();
         try{
             Statement myStmt = program.database.getDBConnect().createStatement();
             results = myStmt.executeQuery("SELECT * FROM Manufacturer");
@@ -57,10 +61,12 @@ public class UnfulfilledRequest{
     }
 
     /** This method is hardcoded to return the IDs of manufacturers depending on
-    given furniture type and category.
+    given furniture category (not type!).
     We chose to hardcode the information because some methods delete entries
     in the database, and searching for an ID based on currently available
     entries will result in errors.
+    Although this makes a new array list every time it is called, it is much
+    faster than going through the database itself.
     @params nothing
     @return the manufacturers' ID in a string array
     */
@@ -68,50 +74,15 @@ public class UnfulfilledRequest{
         ArrayList<String> manuID = new ArrayList<String>();
         String category = program.getFurnitureCategory();
         String type = program.getFurnitureType();
-
-        if(category.equals("Filing") || type.equals("Desk")){
-            manuID.add("002");
-            manuID.add("004");
-            manuID.add("005");
-        }
-        else if(type.equals("Task") || type.equals("Ergonomic")){
-            manuID.add("002");
+        manuID.add("002");
+        manuID.add("004");
+        manuID.add("005");
+        if(category.equals("Chair")){
             manuID.add("003");
         }
-        else if(type.equals("Kneeling") || type.equals("Swing Arm")){
-            manuID.add("002");
-            manuID.add("005");
-        }
-        else if(type.equals("Mesh")){
-            manuID.add("003");
-            manuID.add("005");
-        }
-        else if(type.equals("Executive")){
-            manuID.add("002");
-            manuID.add("004");
-        }
-        else if(type.equals("Study")){
-            manuID.add("002");
-            manuID.add("003");
-            manuID.add("005");
-        }
-        else if(type.equals("Traditional")){
+        else if(category.equals("Desk")){
             manuID.add("001");
-            manuID.add("002");
-            manuID.add("005");
         }
-        else if(type.equals("Adjustable")){
-            manuID.add("001");
-            manuID.add("002");
-            manuID.add("004");
-            manuID.add("005");
-        }
-        else if(type.equals("Standing")){
-            manuID.add("001");
-            manuID.add("004");
-            manuID.add("005");
-        }
-
         return manuID;
     }
 
