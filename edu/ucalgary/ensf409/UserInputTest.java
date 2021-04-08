@@ -7,7 +7,7 @@ Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucal
 @since  2.0
 */
 
-//package edu.ucalgary.ensf409;
+package edu.ucalgary.ensf409;
 import static org.junit.Assert.*;
 import org.junit.*;
 import java.sql.*;
