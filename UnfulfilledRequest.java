@@ -28,7 +28,7 @@ public class UnfulfilledRequest{
     public UnfulfilledRequest(UserInput programInfo){
         this.program = programInfo;
         this.manufacturers = searchDBManufacture();
-        this.manuID = makeIDArrayLists();
+       // this.manuID = makeIDArrayLists();
     }
 
     /** This method goes through the database and looks for the name of

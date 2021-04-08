@@ -46,23 +46,23 @@ public class OrderForm {
           outputStream.write("Furniture Order Form\n");
           outputStream.write("\n");
 
-          outputStream.write("Faculty Name:\n");
+          outputStream.write("Faculty Name:\n"); //empty placeholders to later fill in
           outputStream.write("Contact:\n");
           outputStream.write("Date:\n");
 
           outputStream.write("\n");
-          outputStream.write("Original Request: " + originalRequest);
+          outputStream.write("Original Request: " + originalRequest); //write to the file what was inputted into the command line
       
           outputStream.write("\n");
           outputStream.newLine();
           outputStream.write("Items Ordered\n");
 
-          for(int i = 0; i < itemsOrdered.length; i++){ 
+          for(int i = 0; i < itemsOrdered.length; i++){  //write the ID's of items ordered one by one 
             outputStream.write("ID: " + itemsOrdered[i]);
             outputStream.newLine();
           }
           outputStream.newLine();
-          outputStream.write("Total Price: " + totalPrice);
+          outputStream.write("Total Price: " + totalPrice); //write in the chepaest price
           outputStream.flush();
 
         } catch(FileNotFoundException e){
