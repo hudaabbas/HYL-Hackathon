@@ -20,7 +20,6 @@ public class UnfulfilledRequest{
     private int numOfManufacturers;
     private ResultSet results;
     private UserInput program;
-    private boolean firstRequest;
 
     /** This constructor sets the UserInput data member and calls method to search the manufactures list
     @params UserInput programinfo with database and furniture info in its datamembers
@@ -28,7 +27,6 @@ public class UnfulfilledRequest{
     public UnfulfilledRequest(UserInput programInfo){
         this.program = programInfo;
         this.manufacturers = searchDBManufacture();
-       // this.manuID = makeIDArrayLists();
     }
 
     /** This method goes through the database and looks for the name of
@@ -73,7 +71,7 @@ public class UnfulfilledRequest{
     public ArrayList<String> makeIDArrayLists(){
         ArrayList<String> manuID = new ArrayList<String>();
         String category = program.getFurnitureCategory();
-        String type = program.getFurnitureType();
+
         manuID.add("002");
         manuID.add("004");
         manuID.add("005");

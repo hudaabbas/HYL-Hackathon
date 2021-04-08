@@ -14,12 +14,15 @@ To compile the program use this command:
 To run the program use this command and follow the prompts in the terminal to enter your command line arguments:
     java -cp .:lib/mysql-connector-java-8.0.23.jar:. edu.ucalgary.ensf409.UserInput
 
-## Notes
-You can make multiple requests in one run of the program and "quit" once you are done. Once the program is cancelled the inventory database will be reset to reflect the original given database and all the deleted items will be restored.
+## Program Notes
+You can make multiple requests in one run of the program and "quit" once you are done. With multiple sucesfull requests multiple different OrderForm .txt files will be created matching the request number. Even after the program is cancelled and run again the inventory database will not be reset so all the previously ordered items will be deleted from the table. 
 
 ## Testing
-To compile the tests after compiling the program (see above) use this command:
+To compile the tests after compiling the program (see above under Usage) use this command:
     javac -cp .:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:lib/system-rules-1.19.0.jar edu/ucalgary/ensf409/UserInputTest.java
 
 To run the tests use this command:
     java -cp .:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:lib/system-rules-1.19.0.jar org.junit.runner.JUnitCore edu.ucalgary.ensf409.UserInputTest
+
+## Testing Notes
+Everytime a test is run the inventory database will be reset to reflect the original given database and all the deleted items will be restored.
