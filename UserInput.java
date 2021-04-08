@@ -201,7 +201,7 @@ public class UserInput {
                     processRequest(startProgram);
                     break;
                 case 3:
-                    System.out.println("\nProgram terminated!\n");
+                    System.out.println("\nProgram terminated! Inventory has been reset!\n");
                     endProgram = false;
                     break;
                 default:
