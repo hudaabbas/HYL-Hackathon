@@ -144,7 +144,7 @@ public class UserInput {
         }
         furnitureType = scanner.next();
         String possibleItems = scanner.next();
-        boolean onlyThree = false;
+
         if(possibleItems.charAt(0) <= 57 && possibleItems.charAt(0) >= 48){
             items = Integer.parseInt(possibleItems);
             return true;
@@ -201,7 +201,7 @@ public class UserInput {
                     processRequest(startProgram);
                     break;
                 case 3:
-                    System.out.println("\nProgram terminated! Inventory has been reset!\n");
+                    System.out.println("\nProgram terminated!\n");
                     endProgram = false;
                     break;
                 default:
@@ -209,7 +209,6 @@ public class UserInput {
             }
         if(endProgram == false) break;
         }
-        //somehow call UpdateInventory reset?
         startProgram.database.close(); //close database connection at end
     }
 }
