@@ -72,7 +72,7 @@ public class UserInputTest{
    
     assertTrue("Furniture type is wrong", expected.equals(type));
   }
-
+  @Test
   public void testCheapestPriceOutput() {
     UserInput testObj = new UserInput("scm","ensf409");
     Scanner args = new Scanner(System.in);
@@ -111,6 +111,8 @@ public class UserInputTest{
     
     assertTrue("Item combo is wrong", item == 0);
   }
+  @Test
+  public void 
 
   //need to add more BOUNDARY CASES and EXCEPTION HANDLING!! also above dont work
 

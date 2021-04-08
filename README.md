@@ -1,7 +1,7 @@
 # Introduction
 Huda Abbas 30087827 huda.abbas@ucalgary.ca
 Agum Aulakh agampreet.aulakh@ucalgary.ca
-Nuha Shaikh nuha.shaikh1@ucalgary.ca
+Nuha Shaikh 30084641 nuha.shaikh1@ucalgary.ca
 Melanie Nguyen melanie.nguyen1@ucalgary.ca
 
 # ENSF409 Final Project
