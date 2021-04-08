@@ -9,9 +9,9 @@ Our application takes in a furniture category, type, and the number of items req
 
 ## Usage
 To compile the program use this command:
-    javac -cp .:lib/mysql-connector-java-8.0.23.jar:. DatabaseAccess.java UserInput.java UnfulfilledRequest.java UpdateInventory.java OrderForm.java PriceCalc.java
+    javac -cp .:lib/mysql-connector-java-8.0.23.jar:. edu/ucalgary/ensf409/DatabaseAccess.java edu/ucalgary/ensf409/UserInput.java edu/ucalgary/ensf409/UnfulfilledRequest.java edu/ucalgary/ensf409/UpdateInventory.java edu/ucalgary/ensf409/OrderForm.java edu/ucalgary/ensf409/PriceCalc.java
 To run the program use this command and follow the prompts in the terminal to enter your command line arguments:
-    java -cp .:lib/mysql-connector-java-8.0.23.jar:. UserInput
+    java -cp .:lib/mysql-connector-java-8.0.23.jar:. edu.ucalgary.ensf409.UserInput
 
 ## Notes
 You can make multiple requests in one run of the program and "quit" once you are done. Once the program is cancelled the inventory database will be reset to reflect the original given database and all the deleted items will be restored.

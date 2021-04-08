@@ -10,7 +10,7 @@ Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucal
   * to establish a connection to the database.
 */
 
-//package edu.ucalgary.ensf409;
+package edu.ucalgary.ensf409;
 import java.sql.*;
 
 public class DatabaseAccess {
