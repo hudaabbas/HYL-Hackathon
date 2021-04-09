@@ -1,4 +1,4 @@
-/** 
+/**
 @author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
 Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
 Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
@@ -7,12 +7,12 @@ Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucal
 @since  2.0
 */
 
-//package edu.ucalgary.ensf409;
+package edu.ucalgary.ensf409;
 import java.sql.*;
 import java.util.ArrayList;
 
 /*
- UnfulfilledRequest prints a list of manufuactures to the terminal 
+ UnfulfilledRequest prints a list of manufuactures to the terminal
  when the furniture combination is not possible
 */
 public class UnfulfilledRequest{
@@ -30,13 +30,15 @@ public class UnfulfilledRequest{
     }
 
     /** This method goes through the database and looks for the name of
-    manufacturers based on the IDs found by findIDForPRint()
+    manufacturers based on the IDs found by makeIDArrayLists().
+    This method is used by the constructor and it initializes the array list
+    field.
     @params nothing
     @return the manufacturers name in a string array
     */
     public ArrayList<String> searchDBManufacture(){
-        ArrayList<String> manuFound = new ArrayList<String>(); 
-        ArrayList<String> manuID = findIDForPrint();
+        ArrayList<String> manuFound = new ArrayList<String>();
+        ArrayList<String> manuID = makeIDArrayLists();
         try{
             Statement myStmt = program.database.getDBConnect().createStatement();
             results = myStmt.executeQuery("SELECT * FROM Manufacturer");
@@ -56,35 +58,28 @@ public class UnfulfilledRequest{
         return manuFound;
     }
 
-    /** This method goes through the database and looks for a furniture object with the
-    given type.
+    /** This method is hardcoded to return the IDs of manufacturers depending on
+    given furniture category (not type!).
+    We chose to hardcode the information because some methods delete entries
+    in the database, and searching for an ID based on currently available
+    entries will result in errors.
+    Although this makes a new array list every time it is called, it is much
+    faster than going through the database itself.
     @params nothing
     @return the manufacturers' ID in a string array
     */
-    public ArrayList<String> findIDForPrint(){
+    public ArrayList<String> makeIDArrayLists(){
         ArrayList<String> manuID = new ArrayList<String>();
-        int count = 0;
-        try{
-            Statement myStmt = program.database.getDBConnect().createStatement();
-            results = myStmt.executeQuery("SELECT * FROM "+ program.getFurnitureCategory());
-            while(results.next()){
-                if(results.getString("Type").equals(program.getFurnitureType())){
-                    boolean add = true;
-                    for(int i = 0; i < count; i++){
-                        if(manuID.get(i) == results.getString("ManuID")){
-                            add = false;
-                        }
-                    }
-                    if(add){
-                        manuID.add(count, results.getString("ManuID") );
-                        count++;
-                    }
-                }
-            }
-            myStmt.close();
+        String category = program.getFurnitureCategory();
+
+        manuID.add("002");
+        manuID.add("004");
+        manuID.add("005");
+        if(category.equals("Chair")){
+            manuID.add("003");
         }
-        catch (SQLException ex) {
-            ex.printStackTrace();
+        else if(category.equals("Desk")){
+            manuID.add("001");
         }
         return manuID;
     }

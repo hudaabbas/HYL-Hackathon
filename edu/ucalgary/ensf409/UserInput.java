@@ -1,4 +1,4 @@
-/** 
+/**
 @author Agam Aulakh <a href="mailto:agampreet.aulakh@ucalgary.ca">agampreet.aulakh@ucalgary.ca </a>
 Nuha Shaikh <a href="mailto:nuha.shaikh1@ucalgary.ca">nuha.shaikh1@ucalgary.ca</a>
 Huda Abbas <a href="mailto:huda.abbas@ucalgary.ca">huda.abbas@ucalgary.ca</a>
@@ -7,8 +7,9 @@ Melanie Nguyen <a href= "mailto:melanie.nguyen1@ucalgary.ca">melanie.nguyen@ucal
 @since  2.0
 */
 
-//package edu.ucalgary.ensf409;
+package edu.ucalgary.ensf409;
 import java.util.Scanner;
+import java.util.*;
 
 /** UserInput is the main class which extends Database Access and handles all of the user input
 using a switch statement
@@ -20,6 +21,11 @@ public class UserInput {
     public int requestNum;
     public DatabaseAccess database;
     private boolean initiatedConnection;
+
+    private String [] chairTypes = {"Task", "Mesh", "Kneeling", "Ergonomic", "Executive"};
+    private String [] lampTypes = {"Desk", "Swing Arm", "Study"};
+    private String [] deskTypes = {"Traditional", "Adjustable", "Standing"};
+    private String [] filingTypes = {"Small", "Medium", "Large"};
 
     /** This constructor calls the Database constructor to initialize the connection
     @params the username for the database connection
@@ -57,6 +63,33 @@ public class UserInput {
     public int getItems() {
         return this.items;
     }
+ 
+    /**
+     * Setter method for data member furnitureCategory
+     * @params String value of category of furniture
+     * @return nothing
+    */
+    public void setFurnitureCategory(String temp){
+        this.furnitureCategory = temp;
+    }
+
+    /**
+     * Setter method for data member furnitureType
+     * @params String value for the type of furniture
+     * @return nothing
+    */
+    public void setFurnitureType(String temp){
+        this.furnitureType = temp;
+    }
+
+    /**
+     * Setter method for item number
+     * @params sets int value for Items
+     * @return nothing
+    */
+    public void setItems(int temp){
+        this.items = temp;
+    }
 
     /** This is the menu method. It first makes sure a connection has
     been made with the database before taking in a request.
@@ -71,7 +104,7 @@ public class UserInput {
         Scanner scanned = new Scanner(System.in);
         boolean continueProg = takeRequest(scanned);
         if(initiatedConnection && continueProg){
-            if(correctNameOfObject()){
+            if(correctNameOfObject() && correctTypeOfObject() && items>0){
                 this.requestNum++;
                 return 2;
             }
@@ -80,10 +113,10 @@ public class UserInput {
             return 3;
         }
         System.out.println("wrong input given");
-        return 0; // weird name was added to the furniture category
+        return 0;
     }
 
-    /** This method checks if a correct furniture name was read.
+    /** This method checks if a correct furniture category was read.
     @params nothing
     @return true if correct, false if incorrect
     */
@@ -95,7 +128,33 @@ public class UserInput {
         return false;
     }
 
-    /** This method takes the request by reading from the command line using a scanner
+    /** This method checks if a correct furniture type was read, depending on furniture kind
+    @params nothing
+    @return true if correct, false if incorrect
+    */
+    public boolean correctTypeOfObject(){
+        if(furnitureCategory.equals("Chair")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(chairTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        else if (furnitureCategory.equals("Desk")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(deskTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        else if(furnitureCategory.equals("Filing")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(filingTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        else if (furnitureCategory.equals("Lamp")){
+            Set<String> checkForType = new HashSet<String>(Arrays.asList(lampTypes));
+    	    return checkForType.contains(furnitureType);
+        }
+        return false;
+    }
+
+    /** This method takes the request by reading from the command line using a scanner.
+    This method can detect negative input of items, furniture types that up to
+    2 words long. It does not handle user input that does not follow the instructions.
     @params nothing
     @return default is true, false if user wants to quit
     */
@@ -105,13 +164,26 @@ public class UserInput {
         " with the first letter capitalized, separated by spaces and with no quotations");
         System.out.println("example: Chair Mesh 1");
         System.out.println("or write Quit to terminate program\n");
-        
-        furnitureCategory = scanner.next();
+
+        setFurnitureCategory(scanner.next());
         if(furnitureCategory.equals("Quit") || furnitureCategory.equals("quit")){
             return false;
         }
-        furnitureType = scanner.next();
-        items = scanner.nextInt();
+        setFurnitureType(scanner.next());
+        String possibleItems = scanner.next();
+
+        if(possibleItems.charAt(0) <= 57 && possibleItems.charAt(0) >= 48){
+            setItems(Integer.parseInt(possibleItems));
+            return true;
+        }
+        if(possibleItems.charAt(0) == '-'){
+            //items = -10
+            return true;
+        }
+        furnitureType+=" ";
+        furnitureType+=possibleItems;
+        items = Integer.parseInt(scanner.next());
+
         return true;
     }
 
@@ -132,8 +204,9 @@ public class UserInput {
         return new UserInput(scanner.next(), scanner.next());
     }
 
-    /** This accepts different tests for the program and calls the resulting classes to fulfill a users furniture request
-     * Instructions for running and using this program is in README.md
+    /** This accepts different tests for the program and calls the appropriate
+    classes to fulfill a furniture request.
+    Instructions for running and using this program is in README.md
     @params args command line arguemnts (not in use, optional)
     @return returns the new instantiation of the UserInput class using the command line
     */
@@ -163,7 +236,6 @@ public class UserInput {
             }
         if(endProgram == false) break;
         }
-
         startProgram.database.close(); //close database connection at end
     }
 }
