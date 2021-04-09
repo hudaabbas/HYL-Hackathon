@@ -51,7 +51,6 @@ public class UpdateInventory {
 						}
 					}
 					itemInfo[i] = sb.toString();
-					System.out.println("Item information is: "+sb);
 				}
 				stment.close();
 				results.close();
@@ -69,8 +68,9 @@ public class UpdateInventory {
 			
 		} catch(SQLException e) {
 			System.out.println("Error, unable to delete table");
-		}
+		} 
 		return itemInfo;
+
 	}
 
 }

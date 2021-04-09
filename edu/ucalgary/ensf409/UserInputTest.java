@@ -32,107 +32,187 @@ public class UserInputTest{
     try{
       testObj.close();
       if(test == testObj.getDBConnect().isClosed()){
-          test = false; //shouldnt this be =true?
+          test = true; 
       }
     } catch (SQLException e){
         test = false;
     }
-
-    assertTrue("Furniture category is wrong", test);
+    assertTrue("", test);
   }
 
   @Test
   //UserInput constructor test
   //Checking if inputs properly parse furiture category
-  public void testFurnitureOrderInputCategory() {
+  public void testFurnitureCategoryInput() {
     UserInput testObj = new UserInput("scm","ensf409");
-    Scanner args = new Scanner(System.in);
-    testObj.takeRequest(args);
-    String expected = "Chair";
+    testObj.setFurnitureCategory("Filing");
+    //testObj.takeRequest("Filing Medium 1");
+    String expected = "Filing";
     String category = testObj.getFurnitureCategory();
 
-    assertTrue("initializing furnitureCategory with takeRequest and testing it with its getter method faile", expected.equals(category));
+    assertTrue("initializing furnitureCategory with takeRequest and testing it with its getter method failed", expected.equals(category));
   }
 
   @Test 
   //Testing when the input # of items is 5
   public void testFurnitureOrderInputItems() {
     UserInput testObj = new UserInput("scm","ensf409");
-    Scanner args = new Scanner(System.in);
-    testObj.takeRequest(args);
+    testObj.setItems(5);
+    //testObj.takeRequest("Desk Standing 5");
     int expected = 5;
     int item = testObj.getItems();
 
-    assertTrue("Number of furniture items is wrong", expected == item);
+    assertTrue("initializing UserInput's private data member items with takeRequest and testing it with its getter method failed", expected == item);
   }
 
-  @Test //Testing where input type of furniture is MESH, category should be chair
+  @Test 
+  //Testing where input type of furniture is 
   public void testFurnitureOrderInputType() {
     UserInput testObj = new UserInput("scm","ensf409");
-    Scanner args = new Scanner(System.in);
-    testObj.takeRequest(args);
-    String expected = "Mesh";
+    testObj.setFurnitureType("Swing Arm");
+    //testObj.takeRequest("Lamp Swing Arm 2";
+    String expected = "Swing Arm";
     String type = testObj.getFurnitureType();
 
-    assertTrue("Furniture type is wrong", expected.equals(type));
+    assertTrue("initializing furnitureType with takeRequest with an input that has a space and testing it with its getter method failed", expected.equals(type));
   }
 
   @Test
+  //Testing when the input # of items is -3
+  //NOT WORKING RN CAUSE BEING SET WITHOUT USERINPUT BEING CHECKED!!
+  public void testNegItems() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    testObj.setItems(-3);
+    //testObj.takeRequest("Desk Standing -3");
+    int item = testObj.getItems();
+    assertTrue("initializing UserInput's items with a negative number should not update it, stay null", item == 0);
+  }
+
+  //Add tests for incorect category/type where furnitureType and furnitureCateogry should be null!!
+
+  @Test
+  //testing PriceCalc's calculateThePrice() method
+  //Directly setting user input
+  //check if the lowest price is returned for the multiple items set
   public void testCheapestPriceOutput() {
     UserInput testObj = new UserInput("scm","ensf409");
-    Scanner args = new Scanner(System.in);
-    testObj.takeRequest(args);
+    testObj.setFurnitureCategory("Filing");
+    testObj.setFurnitureType("Small");
+    testObj.setItems(2);
     PriceCalc priceObj = new PriceCalc(testObj);
     priceObj.calculateThePrice();
     int priceCalc = priceObj.getCheapestPrice();
-    int  expected = 150;
-    assertTrue("Cheapest price is wrong", priceCalc == expected);
+    int expected = 200;
+   
+    this.itemInfo = priceObj.infoToRestore; //Copy of all info for the ID's found to restore the inventory database after this test
+
+    assertTrue("calling calculateThePrice() with valid inputs does not return the correct calculated price combination", priceCalc == expected);
   }
 
   @Test
-  public void testItemsOrdered() {
+  //testing PriceCalc correctly changes to true if order is fulfilled
+  //guarunteed valid UserInput
+  //calculateThePrice() should change the default false value to true
+  public void testBooleanFulfilled() {
     UserInput testObj = new UserInput("scm","ensf409");
-    Scanner args = new Scanner(System.in);
-    testObj.takeRequest(args);
+    testObj.setFurnitureCategory("Desk");
+    testObj.setFurnitureType("Standing");
+    testObj.setItems(1);
+
+    PriceCalc priceObj = new PriceCalc(testObj);
+    priceObj.calculateThePrice();
+    boolean isTrue = priceObj.fulfilled; //should be true
+  
+    this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
+    assertTrue("calling calculateThePrice() with valid order form should change the boolean fulfilled PriceCalc data memeber to true", isTrue);
+  }
+
+  @Test
+   //testing PriceCalc's calculateThePrice() method
+  //Directly setting user input
+  //check if the ID numbers for the items order is correctly stored 
+  public void testIDOfItemsOrdered() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    testObj.setFurnitureCategory("Lamp");
+    testObj.setFurnitureType("Desk");
+    testObj.setItems(2);
+
     PriceCalc priceObj = new PriceCalc(testObj);
     priceObj.calculateThePrice();
     String[] itemCombo = priceObj.getItemCombination();
-    OrderForm order = new OrderForm(testObj, priceObj.getCheapestPrice(), itemCombo);
-    this.itemInfo = order.storedItemInfo;
-    String[] itemsOrderedExpected = {"C0942,C9890"};
+ 
+    String[] itemsOrderedExpected = {"L013","L208","L564"};
     boolean test = true;
     for(int i = 0; i < itemCombo.length; i++){
-      if(itemsOrderedExpected[i] != itemCombo[i]){
-        test = false;
-      }
+      if(itemsOrderedExpected[i].equals(itemCombo[i])){ //check all ID's in the array match
+      } else { test = false; }
     }
-    assertTrue("Item combo is wrong", test);
+
+    this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
+    assertTrue("calling calculateThePrice() which stores the ID's of the fulfilled order in itemCombination failed", test);
   }
 
   @Test
-  public void testNegItems() {
+   //testing OrderForms's createFile() method
+  //Setting random file input
+  //check if calculated price, original request and ID numbers of the items ordered correctly read into file
+  public void testOrderFormOutput() {
     UserInput testObj = new UserInput("scm","ensf409");
-    Scanner args = new Scanner(System.in);
-    testObj.takeRequest(args);
-    int item = testObj.getItems();
-    assertTrue("Item combo is wrong", item == 0);
+    testObj.setFurnitureCategory("TestCategory");
+    testObj.setFurnitureType("TestType");
+    testObj.setItems(3);
+    String[] testIDs = {"Test1","Test2"};
+    OrderForm order = new OrderForm(testObj, 150, testIDs);
+    order.createFile("TestFile"); //will create a file called TestFile0.txt
+    //Note: will also try to delete a table but since TestCategory is not a valid table will catch error and move on
+    boolean test = true;
+    
+    String[] tempArray = {
+      "Furniture Order Form",
+      "",
+      "Faculty Name:",
+      "Contact:",
+      "Date:",
+      "",
+      "Original Request: TestCategory TestType, 3",
+      "",
+      "Items Ordered",
+      "ID: Test1",
+      "ID: Test2",
+      "",
+      "Total Price: $150"
+    }; 
+    
+    try{
+      String[] read = readFile("TestFile0.txt"); //reads in the created .txt file using helper utility method below
+      for(int i = 0; i < read.length; i++){
+        if(tempArray[i].equals(read[i])){ //check all file outputs match hardcoded array
+        } else{
+          test = false;
+        }
+      }
+    } catch(Exception e){
+        test = false;
+    }
+    
+    assertTrue("calling createFile() which creates a formated order in a .txt file using the price, request and ID ordered failed", test);
   }
-
+  
   @Rule
   // Handle System.exit() status
   public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-
+  
   @Test
   public void testFailedDBConnection() throws Exception {
  
     exit.expectSystemExitWithStatus(1);
+    System.exit(1);
+  } 
 
-  }
 
   /** Pre- and Post-test processes
    * 
   */
-
   @After
   public void end() {
     try{
@@ -144,7 +224,7 @@ public class UserInputTest{
       System.out.println("Unsucesfull dbconection when doing post-test processes");
       System.exit(1);
     }
-  }
+  } 
 
 
   /**  
@@ -154,21 +234,21 @@ public class UserInputTest{
   //restore all data removed from the directory
   public void restoreAllData() {
     for(int i = 0; i < itemInfo.length ; i++){
-      String[] info = itemInfo[i].split("\\s*,\\s*");
+      String[] info = itemInfo[i].split(",[ ]*");
+
       if(info.length == 6){
         restoreLamp(info[0], info[1], info[2], info[3], Integer.parseInt(info[4]), info[5]);
       } if(info.length == 7){
-        if(info[1].equals("Traditional") || info[1].equals("Adjustable") || info[1].equals("Standing")){
-          restoreDeskFiling("desk", info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), info[6]);
-        } else{
-        restoreDeskFiling("chair", info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), info[6]);
-        }
-      }if(info.length == 8){
+          if(info[1].equals("Traditional") || info[1].equals("Adjustable") || info[1].equals("Standing")){
+            restoreDeskFiling("desk", info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), info[6]);
+          } else{
+          restoreDeskFiling("filing", info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), info[6]);
+          }
+      } if(info.length == 8){
         restoreChair(info[0], info[1], info[2], info[3], info[4], info[5], Integer.parseInt(info[6]), info[7]);
       }
     }
   }
-
 
   // Read in a specified file, given path+filename
   public String[] readFile(String fileAndPath) throws Exception {
@@ -184,25 +264,13 @@ public class UserInputTest{
     return contents.toArray(new String[contents.size()]);
   }
 
-  public String[] writeTestInputData() throws Exception {
-    // Create some data and write it to the file
-    String[] cRossetti = {
-      "Apples and quinces,",
-      "Lemons and oranges,",
-      "Plump unpeck’d cherries,",
-      "Melons and raspberries,",
-      "Bloom-down-cheek’d peaches,",
-      "Swart-headed mulberries,"
-    }; 
-    return cRossetti;
- }
 	/* 
 	 * Restores items from table "Desk" or "filing"
 	*/
 	public void restoreDeskFiling(String table,String ID, String type, String legs, String top, String drawer, int price, String manuId) {
 		if(table.equals("desk")) {
 			try {
-        String query= "INSERT INTO desk(ID, Type, Legs, Top, Drawer, Price, ManuID) VALUES (?,?,?,?,?,?,?)";
+        String query= "INSERT INTO DESK(ID, Type, Legs, Top, Drawer, Price, ManuID) VALUES (?,?,?,?,?,?,?)";
     		PreparedStatement state= dbConnect.prepareStatement(query);
 
     		state.setString(1, ID);
@@ -213,8 +281,7 @@ public class UserInputTest{
     		state.setInt(6, price);
     		state.setString(7, manuId);
 
-    		int rows= state.executeUpdate();
-    		System.out.println("Rows updated: "+rows);
+    		state.executeUpdate();
     		state.close();
 		  }   catch(SQLException e) {
 			  System.out.println("Error, unable to insert new item into table 'Desk' ");
@@ -222,7 +289,7 @@ public class UserInputTest{
 		}
 		if(table.equals("filing")) {
 			try {
-				String query= "INSERT INTO filing(ID, Type, Rails, Drawers, Cabinet, Price, ManuID) VALUES (?,?,?,?,?,?,?)";
+				String query= "INSERT INTO FILING(ID, Type, Rails, Drawers, Cabinet, Price, ManuID) VALUES (?,?,?,?,?,?,?)";
 	    		PreparedStatement state= dbConnect.prepareStatement(query);
 
 	    		state.setString(1, ID);
@@ -233,8 +300,7 @@ public class UserInputTest{
 	    		state.setInt(6, price);
 	    		state.setString(7, manuId);
 
-	    		int rows= state.executeUpdate();
-	    		System.out.println("Rows updated: "+rows);
+	    		state.executeUpdate();
 	    		state.close();
 			} catch(SQLException e) {
 				System.out.println("Error, unable to insert new item into table 'filing' ");
@@ -258,8 +324,7 @@ public class UserInputTest{
         state.setInt(7, price);
         state.setString(8,manuId);
 
-        int rows= state.executeUpdate();
-        System.out.println("Rows updated: "+rows);
+        state.executeUpdate();
         state.close();
     } catch(SQLException e) {
       System.out.println("Error, unable to insert new item into table 'Chair' ");
@@ -282,8 +347,7 @@ public class UserInputTest{
 	    		state.setInt(5, price);
 	    		state.setString(6, manuId);
 
-	    		int rows= state.executeUpdate();
-	    		System.out.println("Rows updated: "+rows);
+	    		state.executeUpdate();
 	    		state.close();
 			} catch(SQLException e) {
 				System.out.println("Error, unable to insert new item into table 'lamp' ");

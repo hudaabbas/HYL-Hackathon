@@ -16,7 +16,7 @@ import java.sql.*;
 public class PriceCalc {
     private UserInput programInfo;
     private Connection dbConnect;
-    private boolean fulfilled = false; //determine whether an order can be fullfiled or not
+    public boolean fulfilled = false; //determine whether an order can be fullfiled or not
     private String[] categories; //holds the furnitrure pieces for the specifc category
 	private String[] itemsAvailablePrice; //holds associated price of all the items with the desired furniture type & category
 	private String[] itemIds; //holds associated ID of all the items with the desired furniture type & category
@@ -25,6 +25,7 @@ public class PriceCalc {
     private int cheapestPrice;
     private String[] itemCombination; //combo of all the ID's
     private int number; //number of furniture items user has requested
+    public String[] infoToRestore; //information that holds a string of the to-be-deleted items ordered to restore the database when testing
 
     /** This constructor uses the information from UserInput class to intialize some of its private data members
     @params UserInput programInfo for database connection and order request info
@@ -77,6 +78,7 @@ public class PriceCalc {
         if(fulfilled){ //if order sucesfull create your order .txt file
             OrderForm order= new OrderForm(programInfo, cheapestPrice, itemCombination);
             order.createFile("OrderForm");
+            infoToRestore = order.storedItemInfo;
         } else { //if unsucessfull go to the class which outputs possible manufactures and print to terminal
             UnfulfilledRequest checkClass = new UnfulfilledRequest(programInfo);
             checkClass.print();
@@ -89,7 +91,7 @@ public class PriceCalc {
      * @params String table which is the inputed furniture category
      * @return nothing
     */
-	public void findCategories(String table) {
+	private void findCategories(String table) {
 		try {
             Statement st= dbConnect.prepareStatement(table);
             ResultSet rs = st.executeQuery("SELECT * FROM " + table);
@@ -120,7 +122,7 @@ public class PriceCalc {
      * @params String table is the furniture category, String furniture type is the type of furniture user requested
      * @return nothing
     */
-	public void getItemsInCategories(String table, String furnitureType) {
+	private void getItemsInCategories(String table, String furnitureType) {
 		try {
 			Statement st= dbConnect.prepareStatement(table);
 			ResultSet rs = st.executeQuery("SELECT * FROM "+ table);
@@ -168,7 +170,7 @@ public class PriceCalc {
      * @params size of the combination to be printed, size of data[] array
      * @return nothing
     */
-    public void allCombinations(int arr[], int data[], int start, int end, int index, int r) {  
+    private void allCombinations(int arr[], int data[], int start, int end, int index, int r) {  
         if (index == r) { // current combination is ready now to be checked
             checkCombination(data);
             return; //base case
@@ -189,7 +191,7 @@ public class PriceCalc {
      * @params indexArr int array of all the possible index position combinations  
      * @return nothing
     */
-    public void checkCombination(int[] indexArr){
+    private void checkCombination(int[] indexArr){
         for(int j = 0; j < indexArr.length; j++){
             if(indexArr[j] >= numOfItems)  //if index value greater than number of items exit
                 return;
@@ -256,7 +258,7 @@ public class PriceCalc {
      * @params String[][] myitems is 2D array that holds the Y and N values of a specfic index combination to try and attempt to fill it all with Y
      * @return boolean value, true if all Y's, false otehrwise
     */
-    public boolean comboFound(String[][] myitems){
+    private boolean comboFound(String[][] myitems){
         for(int items = 0; items < number; items++){
             for(int i = 0; i < myitems[0].length; i++){
                 if(myitems[items][i].equals("N")){ //not equal to Y
