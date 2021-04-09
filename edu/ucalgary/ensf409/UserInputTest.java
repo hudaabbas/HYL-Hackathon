@@ -14,17 +14,18 @@ import java.sql.*;
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
-//import org.junit.contrib.java.lang.system.ExpectedSystemExit;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
-/** UserInputTest is a class that tests the UserInput class and its methods
+/** UserInputTest is a class that tests all the classes in our program and their methods
  * Tests must be run against the expected given INVENTORY database to work
 */
 
 public class UserInputTest{
-
   private String[] itemInfo;
+  private Connection dbConnect;
+
   @Test
-  // to confirm initializtion/close methods are all working
+  //DatabaseAccess Test to confirm initializtion/close methods are all working
   public void testDBConnect() {
     DatabaseAccess testObj = new DatabaseAccess("jdbc:mysql://localhost/inventory","scm","ensf409");
     boolean test = testObj.initializeConnection();
@@ -41,7 +42,8 @@ public class UserInputTest{
   }
 
   @Test
-  // Constructor created with 2 arguments
+  //UserInput constructor test
+  //Checking if inputs properly parse furiture category
   public void testFurnitureOrderInputCategory() {
     UserInput testObj = new UserInput("scm","ensf409");
     Scanner args = new Scanner(System.in);
@@ -49,10 +51,11 @@ public class UserInputTest{
     String expected = "Chair";
     String category = testObj.getFurnitureCategory();
 
-    assertTrue("Furniture category is wrong", expected.equals(category));
+    assertTrue("initializing furnitureCategory with takeRequest and testing it with its getter method faile", expected.equals(category));
   }
 
-  @Test //Testing where input # of items is 5
+  @Test 
+  //Testing when the input # of items is 5
   public void testFurnitureOrderInputItems() {
     UserInput testObj = new UserInput("scm","ensf409");
     Scanner args = new Scanner(System.in);
@@ -94,6 +97,8 @@ public class UserInputTest{
     PriceCalc priceObj = new PriceCalc(testObj);
     priceObj.calculateThePrice();
     String[] itemCombo = priceObj.getItemCombination();
+    OrderForm order = new OrderForm(testObj, priceObj.getCheapestPrice(), itemCombo);
+    this.itemInfo = order.storedItemInfo;
     String[] itemsOrderedExpected = {"C0942,C9890"};
     boolean test = true;
     for(int i = 0; i < itemCombo.length; i++){
@@ -110,80 +115,94 @@ public class UserInputTest{
     Scanner args = new Scanner(System.in);
     testObj.takeRequest(args);
     int item = testObj.getItems();
-
     assertTrue("Item combo is wrong", item == 0);
   }
 
-  //need to add more BOUNDARY CASES and EXCEPTION HANDLING!! also above dont work
+  @Rule
+  // Handle System.exit() status
+  public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
-  /*
-	 * Gets all the information of all the furniture that will be removed from inventory
-	 * Stores each row's info as a string in an array
-	 */
-	public void getInventory(String table) {
-		itemInfo= new String[itemsOrdered.length];
-		try {
-			for(int i=0;i<itemsOrdered.length;i++) {
-				Statement stment= dbConnect.createStatement();
-	    		ResultSet results= stment.executeQuery("SELECT *FROM "+table+" WHERE ID= '"+itemsOrdered[i]+"'");
+  @Test
+  public void testFailedDBConnection() throws Exception {
+ 
+    exit.expectSystemExitWithStatus(1);
 
-	    		while(results.next()) {
-	    			StringBuilder sb = new StringBuilder();
-	    			ResultSetMetaData rsmd = results.getMetaData();
-	    			int numberOfColumns = rsmd.getColumnCount();
-	    			for (int j = 1; j<= numberOfColumns; j++) {
-	    			    sb.append(results.getString(j));
-	    			    if (j < numberOfColumns) {
-	    			        sb.append(", ");
-	    			    }
-	    			}
-	    			itemInfo[i] = sb.toString();
-	    			System.out.println("Item information is: "+sb);
-	    		}
-			  stment.close();
-			}
-		   }
-		   catch(SQLException e) {
-			   System.out.println("Error, unable to get item row information");
-		   }
-	}
+  }
 
-	/*
-	 * Restores inventory for items in table "Chair"
-	 */
-	public void restoreInventory(String table, String ID, String type, String l, String arm, 
-			String seat, String cushion, int price, String manuId ) {
-		if(table.equals("chair")) {
-			try {
-			String query= "INSERT INTO chair(ID, Type, Legs, Arms, Seat, Cushion, Price, ManuID) VALUES (?,?,?,?,?,?,?,?)";
-    		PreparedStatement state= dbConnect.prepareStatement(query);
-    		state.setString(1,ID);
-    		state.setString(2, type);
-    		state.setString(3,l);
-    		state.setString(4,arm);
-    		state.setString(5,seat);
-    		state.setString(6, cushion);
-    		state.setInt(7, price);
-    		state.setString(8,manuId);
+  /** Pre- and Post-test processes
+   * 
+  */
 
-    		int rows= state.executeUpdate();
-    		System.out.println("Rows updated: "+rows);
-    		state.close();
-		}
-		catch(SQLException e) {
-			   System.out.println("Error, unable to insert new item into table 'Chair' ");
-		   }
+  @After
+  public void end() {
+    try{
+      this.dbConnect = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
+      if(itemInfo != null){
+        restoreAllData();
+      }
+    } catch(SQLException e){
+      System.out.println("Unsucesfull dbconection when doing post-test processes");
+      System.exit(1);
+    }
+  }
 
-		}
-	}
 
-	/** Restores items from table "Desk" or "filing"
-	 * 
+  /**  
+   * Utility methods to perform common routines 
+  */
+
+  //restore all data removed from the directory
+  public void restoreAllData() {
+    for(int i = 0; i < itemInfo.length ; i++){
+      String[] info = itemInfo[i].split("\\s*,\\s*");
+      if(info.length == 6){
+        restoreLamp(info[0], info[1], info[2], info[3], Integer.parseInt(info[4]), info[5]);
+      } if(info.length == 7){
+        if(info[1].equals("Traditional") || info[1].equals("Adjustable") || info[1].equals("Standing")){
+          restoreDeskFiling("desk", info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), info[6]);
+        } else{
+        restoreDeskFiling("chair", info[0], info[1], info[2], info[3], info[4], Integer.parseInt(info[5]), info[6]);
+        }
+      }if(info.length == 8){
+        restoreChair(info[0], info[1], info[2], info[3], info[4], info[5], Integer.parseInt(info[6]), info[7]);
+      }
+    }
+  }
+
+
+  // Read in a specified file, given path+filename
+  public String[] readFile(String fileAndPath) throws Exception {
+    BufferedReader file = new BufferedReader(new FileReader(fileAndPath));
+    String tmp = new String();
+    ArrayList<String> contents = new ArrayList<String>();
+
+    while ((tmp = file.readLine()) != null) {
+      contents.add(tmp);
+    }
+
+    file.close();
+    return contents.toArray(new String[contents.size()]);
+  }
+
+  public String[] writeTestInputData() throws Exception {
+    // Create some data and write it to the file
+    String[] cRossetti = {
+      "Apples and quinces,",
+      "Lemons and oranges,",
+      "Plump unpeck’d cherries,",
+      "Melons and raspberries,",
+      "Bloom-down-cheek’d peaches,",
+      "Swart-headed mulberries,"
+    }; 
+    return cRossetti;
+ }
+	/* 
+	 * Restores items from table "Desk" or "filing"
 	*/
-	public void restoreItem(String table,String ID, String type, String legs, String top, String drawer, int price, String manuId) {
+	public void restoreDeskFiling(String table,String ID, String type, String legs, String top, String drawer, int price, String manuId) {
 		if(table.equals("desk")) {
 			try {
-			String query= "INSERT INTO desk(ID, Type, Legs, Top, Drawer, Price, ManuID) VALUES (?,?,?,?,?,?,?)";
+        String query= "INSERT INTO desk(ID, Type, Legs, Top, Drawer, Price, ManuID) VALUES (?,?,?,?,?,?,?)";
     		PreparedStatement state= dbConnect.prepareStatement(query);
 
     		state.setString(1, ID);
@@ -197,14 +216,10 @@ public class UserInputTest{
     		int rows= state.executeUpdate();
     		System.out.println("Rows updated: "+rows);
     		state.close();
+		  }   catch(SQLException e) {
+			  System.out.println("Error, unable to insert new item into table 'Desk' ");
+		  }
 		}
-		catch(SQLException e) {
-			   System.out.println("Error, unable to insert new item into table 'Desk' ");
-		   }
-
-		}
-
-
 		if(table.equals("filing")) {
 			try {
 				String query= "INSERT INTO filing(ID, Type, Rails, Drawers, Cabinet, Price, ManuID) VALUES (?,?,?,?,?,?,?)";
@@ -221,21 +236,43 @@ public class UserInputTest{
 	    		int rows= state.executeUpdate();
 	    		System.out.println("Rows updated: "+rows);
 	    		state.close();
+			} catch(SQLException e) {
+				System.out.println("Error, unable to insert new item into table 'filing' ");
 			}
-			catch(SQLException e) {
-				   System.out.println("Error, unable to insert new item into table 'filing' ");
-			   }
 		}
-
 	}
+
+  /**
+  * Restores inventory for items in table "Chair"
+	*/
+	public void restoreChair(String ID, String type, String l, String arm, String seat, String cushion, int price, String manuId ) {
+    try {
+        String query= "INSERT INTO CHAIR(ID, Type, Legs, Arms, Seat, Cushion, Price, ManuID) VALUES (?,?,?,?,?,?,?,?)";
+        PreparedStatement state= dbConnect.prepareStatement(query);
+        state.setString(1,ID);
+        state.setString(2, type);
+        state.setString(3,l);
+        state.setString(4,arm);
+        state.setString(5,seat);
+        state.setString(6, cushion);
+        state.setInt(7, price);
+        state.setString(8,manuId);
+
+        int rows= state.executeUpdate();
+        System.out.println("Rows updated: "+rows);
+        state.close();
+    } catch(SQLException e) {
+      System.out.println("Error, unable to insert new item into table 'Chair' ");
+    }
+  
+  }
 
 	/*
 	 * Restores inventory for items from table "lamp"
 	 */
-	public void restoreInventory(String table, String ID, String type, String base, String bulb, int price, String manuId) {
-		if(table.contentEquals("lamp")) {
+	public void restoreLamp(String ID, String type, String base, String bulb, int price, String manuId) {
 			try {
-				String query= "INSERT INTO lamp(ID, Type, Base, Bulb, Price, ManuID) VALUES (?,?,?,?,?,?)";
+				String query= "INSERT INTO LAMP(ID, Type, Base, Bulb, Price, ManuID) VALUES (?,?,?,?,?,?)";
 	    		PreparedStatement state= dbConnect.prepareStatement(query);
 
 	    		state.setString(1, ID);
@@ -248,12 +285,9 @@ public class UserInputTest{
 	    		int rows= state.executeUpdate();
 	    		System.out.println("Rows updated: "+rows);
 	    		state.close();
+			} catch(SQLException e) {
+				System.out.println("Error, unable to insert new item into table 'lamp' ");
 			}
-			catch(SQLException e) {
-				   System.out.println("Error, unable to insert new item into table 'lamp' ");
-			   }
-		}
 	}
-
 
 }
