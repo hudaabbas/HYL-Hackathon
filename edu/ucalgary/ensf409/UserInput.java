@@ -63,6 +63,33 @@ public class UserInput {
     public int getItems() {
         return this.items;
     }
+ 
+    /**
+     * Setter method for data member furnitureCategory
+     * @params String value of category of furniture
+     * @return nothing
+    */
+    public void setFurnitureCategory(String temp){
+        this.furnitureCategory = temp;
+    }
+
+    /**
+     * Setter method for data member furnitureType
+     * @params String value for the type of furniture
+     * @return nothing
+    */
+    public void setFurnitureType(String temp){
+        this.furnitureType = temp;
+    }
+
+    /**
+     * Setter method for item number
+     * @params sets int value for Items
+     * @return nothing
+    */
+    public void setItems(int temp){
+        this.items = temp;
+    }
 
     /** This is the menu method. It first makes sure a connection has
     been made with the database before taking in a request.
@@ -138,15 +165,15 @@ public class UserInput {
         System.out.println("example: Chair Mesh 1");
         System.out.println("or write Quit to terminate program\n");
 
-        furnitureCategory = scanner.next();
+        setFurnitureCategory(scanner.next());
         if(furnitureCategory.equals("Quit") || furnitureCategory.equals("quit")){
             return false;
         }
-        furnitureType = scanner.next();
+        setFurnitureType(scanner.next());
         String possibleItems = scanner.next();
 
         if(possibleItems.charAt(0) <= 57 && possibleItems.charAt(0) >= 48){
-            items = Integer.parseInt(possibleItems);
+            setItems(Integer.parseInt(possibleItems));
             return true;
         }
         if(possibleItems.charAt(0) == '-'){

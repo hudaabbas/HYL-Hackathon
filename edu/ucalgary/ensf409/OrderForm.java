@@ -83,7 +83,7 @@ public class OrderForm {
         
         //calls the method which deletes the used ID's from the inventory database
         UpdateInventory update = new UpdateInventory(program.database.getDBConnect(), itemsOrdered);
-        storedItemInfo = update.removeItem(program.getFurnitureCategory());
+        this.storedItemInfo = update.removeItem(program.getFurnitureCategory());
       }
 }
 
