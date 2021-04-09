@@ -32,22 +32,45 @@ public class UpdateInventory {
      * @params String of the furniture category which is the name of the database table
      * @return nothing
     */
-	public void removeItem(String table) {
+	public String[] removeItem(String table) {
+		String[] itemInfo= new String[itemsOrdered.length];  //Stores each row's info as a string in an array
 		try {
+			//Gets all the information of all the furniture before it will be removed from inventory
+			for(int i=0;i<itemsOrdered.length;i++) {
+				Statement stment= dbConnect.createStatement();
+				ResultSet results= stment.executeQuery("SELECT *FROM "+table+" WHERE ID= '"+itemsOrdered[i]+"'");
+  
+				while(results.next()) {
+					StringBuilder sb = new StringBuilder();
+					ResultSetMetaData rsmd = results.getMetaData();
+					int numberOfColumns = rsmd.getColumnCount();
+					for (int j = 1; j<= numberOfColumns; j++) {
+						sb.append(results.getString(j));
+						if (j < numberOfColumns) {
+							sb.append(", ");
+						}
+					}
+					itemInfo[i] = sb.toString();
+					System.out.println("Item information is: "+sb);
+				}
+				stment.close();
+				results.close();
+			  }
+
+			 //now deletes the funiture items after its been save
 			for(int i=0;i<itemsOrdered.length;i++) {
 			   String query= "DELETE FROM "+table+" WHERE ID = ?";
 			   PreparedStatement st = dbConnect.prepareStatement(query);
 			   
 			   st.setString(1, itemsOrdered[i]);
-			
-			   st.executeUpdate();
-			   //System.out.println("Rows updated: "+rows);
-			   
+			   st.executeUpdate();  
 			   st.close();
 			}
+			
 		} catch(SQLException e) {
 			System.out.println("Error, unable to delete table");
 		}
+		return itemInfo;
 	}
 
 }

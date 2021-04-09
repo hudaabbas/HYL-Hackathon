@@ -20,6 +20,7 @@ public class OrderForm {
     private String originalRequest;
     private UserInput program;
     private String[] itemsOrdered;
+    public String[] storedItemInfo;
 
     /** This constructor intializes private data members using the PriceCalc class inputs of the price and IDs of the items ordered
     @params UserInput class input for the original request info
@@ -82,7 +83,7 @@ public class OrderForm {
         
         //calls the method which deletes the used ID's from the inventory database
         UpdateInventory update = new UpdateInventory(program.database.getDBConnect(), itemsOrdered);
-        update.removeItem(program.getFurnitureCategory());
+        storedItemInfo = update.removeItem(program.getFurnitureCategory());
       }
 }
 
