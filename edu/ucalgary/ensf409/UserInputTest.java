@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import java.sql.*;
 import java.io.*;
-import java.util.Scanner;
 import java.util.ArrayList;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
@@ -42,53 +41,59 @@ public class UserInputTest{
 
   @Test
   //UserInput constructor test
-  //Checking if inputs properly parse furiture category
+  //displayMenu() and takeRequest() test
+  //Checking if input properly parses furiture category from a users input string
   public void testFurnitureCategoryInput() {
     UserInput testObj = new UserInput("scm","ensf409");
-    testObj.setFurnitureCategory("Filing");
-    //testObj.takeRequest("Filing Medium 1");
+
+    //replaces System.in which takes input from the command line with our own stream instead
+    ByteArrayInputStream in = new ByteArrayInputStream("Filing Medium 1".getBytes()); 
+    System.setIn(in);
+    testObj.displayMenu();
     String expected = "Filing";
     String category = testObj.getFurnitureCategory();
 
-    assertTrue("initializing furnitureCategory with takeRequest and testing it with its getter method failed", expected.equals(category));
+    assertTrue("initializing furnitureCategory with displayMenu and testing it with its getter method failed", expected.equals(category));
   }
 
   @Test 
-  //Testing when the input # of items is 5
-  public void testFurnitureOrderInputItems() {
+  //displayMenu() and takeRequest() test
+  //Checking if input properly parses # of items from a users input string when its greater than 0
+  public void testFurnitureItemsInput() {
     UserInput testObj = new UserInput("scm","ensf409");
-    testObj.setItems(5);
-    //testObj.takeRequest("Desk Standing 5");
+    System.setIn(new ByteArrayInputStream("Desk Standing 5".getBytes()));
+    testObj.displayMenu();
     int expected = 5;
     int item = testObj.getItems();
 
-    assertTrue("initializing UserInput's private data member items with takeRequest and testing it with its getter method failed", expected == item);
+    assertTrue("initializing UserInput's private data member items with displayMenu which calls takeRequest and testing it with its getter method failed", expected == item);
   }
 
   @Test 
-  //Testing where input type of furniture is 
-  public void testFurnitureOrderInputType() {
+  //using UserInput classes displayMenu() and takeRequest()
+  //Checking if input properly parses a valid Furniture Type
+  public void testFurnitureTypeInput() {
     UserInput testObj = new UserInput("scm","ensf409");
-    testObj.setFurnitureType("Swing Arm");
-    //testObj.takeRequest("Lamp Swing Arm 2";
+    System.setIn(new ByteArrayInputStream("Lamp Swing Arm 2".getBytes()));
+    testObj.displayMenu();
     String expected = "Swing Arm";
     String type = testObj.getFurnitureType();
 
-    assertTrue("initializing furnitureType with takeRequest with an input that has a space and testing it with its getter method failed", expected.equals(type));
+    assertTrue("initializing a 2 word furnitureType with takeRequest with an input that has a space and testing it with its getter method failed", expected.equals(type));
   }
 
   @Test
-  //Testing when the input # of items is -3
-  //NOT WORKING RN CAUSE BEING SET WITHOUT USERINPUT BEING CHECKED!!
+  //UserInput's invalid takeRequest() test
+  //Checking if catches improper # of items from a users input string if its 0 or less
   public void testNegItems() {
     UserInput testObj = new UserInput("scm","ensf409");
-    testObj.setItems(-3);
-    //testObj.takeRequest("Desk Standing -3");
+    System.setIn(new ByteArrayInputStream("Desk Standing -3".getBytes()));
+    testObj.displayMenu();
     int item = testObj.getItems();
     assertTrue("initializing UserInput's items with a negative number should not update it, stay null", item == 0);
   }
 
-  //Add tests for incorect category/type where furnitureType and furnitureCateogry should be null!!
+  //!!Add tests for incorect category/type where furnitureType and furnitureCateogry should be null!!
 
   @Test
   //testing PriceCalc's calculateThePrice() method
