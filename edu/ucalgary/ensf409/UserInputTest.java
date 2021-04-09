@@ -105,7 +105,8 @@ public class UserInputTest{
     testObj.setFurnitureType("Small");
     testObj.setItems(2);
     PriceCalc priceObj = new PriceCalc(testObj);
-    priceObj.calculateThePrice();
+    priceObj.calculateThePrice(); 
+  
     int priceCalc = priceObj.getCheapestPrice();
     int expected = 200;
    
@@ -125,7 +126,7 @@ public class UserInputTest{
     testObj.setItems(1);
 
     PriceCalc priceObj = new PriceCalc(testObj);
-    priceObj.calculateThePrice();
+    priceObj.calculateThePrice(); //Note: this will also create extra/unwanted OrderForm0.txt file which is not being tested here
     boolean isTrue = priceObj.fulfilled; //should be true
   
     this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
@@ -143,14 +144,16 @@ public class UserInputTest{
     testObj.setItems(2);
 
     PriceCalc priceObj = new PriceCalc(testObj);
-    priceObj.calculateThePrice();
-    String[] itemCombo = priceObj.getItemCombination();
+    priceObj.calculateThePrice(); //Note: this will also create unwanted OrderForm0.txt file not being tested here
+    String[] itemCombo = priceObj.getItemCombination(); 
  
     String[] itemsOrderedExpected = {"L013","L208","L564"};
     boolean test = true;
     for(int i = 0; i < itemCombo.length; i++){
       if(itemsOrderedExpected[i].equals(itemCombo[i])){ //check all ID's in the array match
-      } else { test = false; }
+      } else { 
+        test = false; 
+      }
     }
 
     this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
@@ -206,24 +209,27 @@ public class UserInputTest{
   @Rule
   // Handle System.exit() status
   public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-  
+  /*
   @Test
   public void testFailedDBConnection() throws Exception {
  
     exit.expectSystemExitWithStatus(1);
     System.exit(1);
-  } 
+  } */
 
 
-  /** Pre- and Post-test processes
-   * 
+  /** 
+   * Pre- and Post-test processes
   */
   @After
   public void end() {
+    File path = new File("OrderForm0.txt");//calculating the price will also create an additional OrderForm0.txt file which is not wanted as it is not being tested here
+    path.delete(); //delete the unwanted file
+
     try{
       this.dbConnect = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
       if(itemInfo != null){
-        restoreAllData();
+        restoreAllData(); //restore inventory database
       }
     } catch(SQLException e){
       System.out.println("Unsucesfull dbconection when doing post-test processes");
@@ -236,7 +242,7 @@ public class UserInputTest{
    * Utility methods to perform common routines 
   */
 
-  //restore all data removed from the directory
+  //restore all data removed from the database
   public void restoreAllData() {
     for(int i = 0; i < itemInfo.length ; i++){
       String[] info = itemInfo[i].split(",[ ]*");
@@ -255,7 +261,7 @@ public class UserInputTest{
     }
   }
 
-  // Read in a specified file, given path+filename
+  // Read in the specified file given the full filename
   public String[] readFile(String fileAndPath) throws Exception {
     BufferedReader file = new BufferedReader(new FileReader(fileAndPath));
     String tmp = new String();
