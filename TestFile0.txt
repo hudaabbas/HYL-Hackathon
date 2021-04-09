@@ -4,10 +4,10 @@ Faculty Name:
 Contact:
 Date:
 
-Original Request: Chair Task, 1
+Original Request: TestCategory TestType, 3
 
 Items Ordered
-ID: C0914
-ID: C3405
+ID: Test1
+ID: Test2
 
 Total Price: $150
