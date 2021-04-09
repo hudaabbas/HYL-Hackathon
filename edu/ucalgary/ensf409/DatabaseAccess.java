@@ -77,7 +77,6 @@ public class DatabaseAccess {
         try { //need to have try and catch in the case the program fails to make connection with database
             dbConnect = DriverManager.getConnection(this.DBURL, this.USERNAME, this.PASSWORD);
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
         return true;
