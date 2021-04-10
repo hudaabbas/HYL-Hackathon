@@ -161,6 +161,7 @@ public class UserInputTest{
   }
   @Test
   //Testing passwords that is not the root for this project
+  // using incorrect random password
   public void testDatabaseAccessIllegalPassword(){
     UserInput testObj = new UserInput("scm","ensf29");
     boolean test= testObj.initiatedConnection;
@@ -168,6 +169,7 @@ public class UserInputTest{
   }
   @Test
   //Testing Username that is not part of the root for this project
+  //using incorrect random username
   public void testDatabaseAccessIllegalUsername(){
     UserInput testObj = new UserInput("sweg","ensf409");
     boolean test= testObj.initiatedConnection;
