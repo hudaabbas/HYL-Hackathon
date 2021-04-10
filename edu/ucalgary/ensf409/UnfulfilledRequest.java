@@ -29,6 +29,13 @@ public class UnfulfilledRequest{
         this.manufacturers = searchDBManufacture();
     }
 
+    /**
+    Getter
+    */
+    public ArrayList<String> getManufacturers(){
+        return this.manufacturers;
+    }
+
     /** This method goes through the database and looks for the name of
     manufacturers based on the IDs found by makeIDArrayLists().
     This method is used by the constructor and it initializes the array list
