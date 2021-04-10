@@ -20,13 +20,13 @@ import org.junit.contrib.java.lang.system.ExpectedSystemExit;
  * Tests must be run against the expected given INVENTORY database to work
 */
 
-public class UserInputTest{
+public class ProgramTest{
   private String[] itemInfo;
   private Connection dbConnect;
 
   @Test
   //DatabaseAccess Class
-  //using initiliazeConnection to test the initializtion/close methods 
+  //using initiliazeConnection to test the initializtion/close methods
   public void testDBConnect() {
     DatabaseAccess testObj = new DatabaseAccess("jdbc:mysql://localhost/inventory","scm","ensf409");
     boolean test = testObj.initializeConnection();
@@ -178,7 +178,7 @@ public class UserInputTest{
     this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
     assertTrue("calling calculateThePrice() which stores the ID's of the fulfilled order in itemCombination failed", test);
   }
- 
+
   @Test
    //testing OrderForms's createFile() method
   //Setting random file input
@@ -189,13 +189,13 @@ public class UserInputTest{
     testObj.setFurnitureType("TestType");
     testObj.setItems(3);
     String[] testIDs = {"Test1","Test2"};
-    try{ 
+    try{
       OrderForm order = new OrderForm(testObj, 150, testIDs);
       order.createFile("TestFile"); //will create a file called TestFile0.txt
     }catch(IllegalArgumentException e){
       //try's to delete a table but since TestCategory is not a valid table catch error and move on
     }
-    
+
     boolean test = true;
 
     String[] tempArray = {
@@ -307,14 +307,14 @@ public class UserInputTest{
     assertTrue("Unfulfilled Request found wrong manufactuers for Filing Input", manufacturers.equals(checkClass.getManufacturers()));
   }
 
-  
+
   @Test
   //Tests removeItem method from UpdateInventory class
   //Checks number of rows that were updated
-  public void testRemoveItem(){ 
+  public void testRemoveItem(){
     String[] Ids= {"D1030","D2746"};
-    int rows = 0; 
-    try{  
+    int rows = 0;
+    try{
       Connection db = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
       UpdateInventory testInventory= new UpdateInventory(db,Ids);
       testInventory.removeItem("DESK");
@@ -329,7 +329,7 @@ public class UserInputTest{
     this.itemInfo[0]= "D1030, Adjustable, N, Y, N, 150, 002";
     this.itemInfo[1]= "D2746, Adjustable, Y, N, Y, 250, 004";
 
-    assertEquals("calling removeItem which removes the desired row matching the ID numberes failed", 2, rows);    
+    assertEquals("calling removeItem which removes the desired row matching the ID numberes failed", 2, rows);
   }
 
   @Test  (expected= IllegalArgumentException.class)
@@ -338,9 +338,9 @@ public class UserInputTest{
   public void testRemoveItemInvalid_Exception() {
     String[] Ids= {"D1031","D2749","D1339"}; //invalid ID's
     Connection db = null;
-    try{  
+    try{
       db = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
-      
+
     } catch(SQLException e){
       System.out.println("Unsucesfull dbconection when doing testRemoveItem test");
       System.exit(1);
