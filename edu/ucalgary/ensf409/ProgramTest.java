@@ -14,9 +14,8 @@ import java.sql.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.lang.Exception;
-import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
-/** UserInputTest is a class that tests all the classes in our program and their methods
+/** ProgramTest is a class that tests all the classes in our program and their methods
  * Tests must be run against the expected given INVENTORY database to work
 */
 
@@ -104,7 +103,7 @@ public class ProgramTest{
   @Test
   //UserInput's invalid takeRequest() test
   //Checking if catches improper # of items from a users input string if its 0 or less
-  public void testNegItems() {
+  public void testInvavlidNegFurnitureItems() {
     UserInput testObj = new UserInput("scm","ensf409");
     System.setIn(new ByteArrayInputStream("Desk Standing -3".getBytes()));
     testObj.displayMenu();
@@ -112,7 +111,36 @@ public class ProgramTest{
     assertTrue("initializing UserInput's items with a negative number should not update it, stay null", item == 0);
   }
 
-  //!!Add tests for incorect category/type where furnitureType and furnitureCateogry should be null!!
+  @Test
+  //Checking if input properly parses furiture category from a users input string
+  //testing if displayMenu() correctly returns the number that indicates invalid input (0)
+  //uncapitalized category is invalid, does not update furnitureCategory data member
+  public void testFurnitureCategoryInvalidInput() {
+    UserInput testObj = new UserInput("scm","ensf409");
+
+    //replaces System.in which takes input from the command line with our own stream instead
+    ByteArrayInputStream in = new ByteArrayInputStream("filing Medium 1".getBytes());
+    System.setIn(in);
+    int test = testObj.displayMenu(); // returning 0 indicates an incorect input given, resets & asks for another input after
+   
+    assertTrue("initializing furnitureCategory with an incorectly capatilized category failed", test == 0);
+  }
+
+  @Test
+  //using UserInput displayMenu() class and testing correctTypeOfObject() with a getter
+  //Checking if input properly parses only valid Furniture Type
+  //furniture types not in the inventory database should not update the furnitureType data member
+  public void testFurnitureTypeInvalidInput() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    System.setIn(new ByteArrayInputStream("Lamp NotAType 2".getBytes()));
+    testObj.displayMenu();
+    String type = testObj.getFurnitureType();
+    boolean invalid = true;
+    if(type == null){
+      invalid = false;
+    }
+    assertFalse("initializing furnitureType with an input that is not in the database should be null", invalid);
+  }
 
   @Test
   //testing PriceCalc's calculateThePrice() method
@@ -153,7 +181,7 @@ public class ProgramTest{
   }
 
   @Test
-   //testing PriceCalc's calculateThePrice() method
+  //testing PriceCalc's calculateThePrice() method
   //Directly setting user input
   //check if the ID numbers for the items order is correctly stored
   public void testIDOfItemsOrdered() {
@@ -180,7 +208,7 @@ public class ProgramTest{
   }
 
   @Test
-   //testing OrderForms's createFile() method
+  //testing OrderForms's createFile() method
   //Setting random file input
   //check if calculated price, original request and ID numbers of the items ordered correctly read into file
   public void testOrderFormOutput() {
@@ -232,7 +260,7 @@ public class ProgramTest{
   @Test
   //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
   //this test looks for desks manufacturers specifically
-  public void testUnFulfilledArrayList_Desk() {
+  public void testManufacturesArrayList_Desk() {
     UserInput testObj = new UserInput("scm","ensf409");
     testObj.setFurnitureCategory("Desk");
     testObj.setFurnitureType("Standing");
@@ -252,7 +280,7 @@ public class ProgramTest{
   @Test
   //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
   //this test looks for Chair manufacturers specifically
-  public void testUnFulfilledArrayList_Chair() {
+  public void testManufacturesArrayList_Chair() {
     UserInput testObj = new UserInput("scm","ensf409");
     testObj.setFurnitureCategory("Chair");
     testObj.setFurnitureType("Executive");
@@ -272,7 +300,7 @@ public class ProgramTest{
   @Test
   //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
   //this test looks for Lamp manufacturers specifically
-  public void testUnFulfilledArrayList_Lamp() {
+  public void testManufacturesArrayList_Lamp() {
     UserInput testObj = new UserInput("scm","ensf409");
     testObj.setFurnitureCategory("Lamp");
     testObj.setFurnitureType("Desk");
@@ -291,7 +319,7 @@ public class ProgramTest{
   @Test
   //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
   //this test looks for Filing manufacturers specifically
-  public void testUnFulfilledArrayList_Filing() {
+  public void testManufacturesArrayList_Filing() {
     UserInput testObj = new UserInput("scm","ensf409");
     testObj.setFurnitureCategory("Filing");
     testObj.setFurnitureType("Small");
@@ -306,7 +334,6 @@ public class ProgramTest{
 
     assertTrue("Unfulfilled Request found wrong manufactuers for Filing Input", manufacturers.equals(checkClass.getManufacturers()));
   }
-
 
   @Test
   //Tests removeItem method from UpdateInventory class
@@ -349,18 +376,6 @@ public class ProgramTest{
     UpdateInventory testInventory= new UpdateInventory(db,Ids);
     testInventory.removeItem("desk");
   }
-
-  @Rule
-  // Handle System.exit() status
-  public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-  /*
-  @Test
-  public void testFailedDBConnection() throws Exception {
-
-    exit.expectSystemExitWithStatus(1);
-    System.exit(1);
-  } */
-
 
   /**
    * Pre- and Post-test processes

@@ -112,6 +112,7 @@ public class UserInput {
         if(!continueProg){
             return 3;
         }
+        setFurnitureType(null); //invalid type remove it from data member, set to null
         System.out.println("wrong input given");
         return 0;
     }
@@ -125,6 +126,7 @@ public class UserInput {
         || furnitureCategory.equals("Filing") || furnitureCategory.equals("Lamp")){
             return true;
         }
+        setFurnitureCategory(null); //invalid category remove it from data member, set to null
         return false;
     }
 
