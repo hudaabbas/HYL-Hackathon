@@ -26,7 +26,7 @@ public class UserInputTest{
 
   @Test
   //DatabaseAccess Class
-  //using initiliazeConnection to test the initializtion/close methods 
+  //using initializeConnection to test the initialization/close methods 
   public void testDBConnect() {
     DatabaseAccess testObj = new DatabaseAccess("jdbc:mysql://localhost/inventory","scm","ensf409");
     boolean test = testObj.initializeConnection();
@@ -38,7 +38,7 @@ public class UserInputTest{
     } catch (SQLException e){
         test = false;
     }
-    assertTrue("The database connection was not sucesfully closed or wasn't correctly initialized at first", test);
+    assertTrue("The database connection was not successfully closed or wasn't correctly initialized at first", test);
   }
 
   @Test
@@ -64,7 +64,7 @@ public class UserInputTest{
   @Test
   //UserInput constructor test
   //displayMenu() and takeRequest() test
-  //Checking if input properly parses furiture category from a users input string
+  //Checking if input properly parses furniture category from a users input string
   public void testFurnitureCategoryInput() {
     UserInput testObj = new UserInput("scm","ensf409");
 
@@ -115,7 +115,7 @@ public class UserInputTest{
     assertTrue("initializing UserInput's items with a negative number should not update it, stay null", item == 0);
   }
 
-  //!!Add tests for incorect category/type where furnitureType and furnitureCateogry should be null!!
+  //!!Add tests for incorrect category/type where furnitureType and furnitureCateogory should be null!!
 
   @Test
   //testing PriceCalc's calculateThePrice() method
@@ -139,7 +139,7 @@ public class UserInputTest{
 
   @Test
   //testing PriceCalc correctly changes to true if order is fulfilled
-  //guarunteed valid UserInput
+  //guranteed valid UserInput
   //calculateThePrice() should change the default false value to true
   public void testBooleanFulfilled() {
     UserInput testObj = new UserInput("scm","ensf409");
