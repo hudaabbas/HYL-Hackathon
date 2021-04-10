@@ -159,7 +159,22 @@ public class UserInputTest{
     this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
     assertTrue("calling calculateThePrice() which stores the ID's of the fulfilled order in itemCombination failed", test);
   }
-
+  @Test
+  //Testing passwords that is not the root for this project
+  // using incorrect random password
+  public void testDatabaseAccessIllegalPassword(){
+    UserInput testObj = new UserInput("scm","ensf29");
+    boolean test= testObj.initiatedConnection;
+    assertEquals("The password is incorrect", true, test);
+  }
+  @Test
+  //Testing Username that is not part of the root for this project
+  //using incorrect random username
+  public void testDatabaseAccessIllegalUsername(){
+    UserInput testObj = new UserInput("sweg","ensf409");
+    boolean test= testObj.initiatedConnection;
+    assertEquals("The username is incorrect", true, test);
+  }
   @Test
    //testing OrderForms's createFile() method
   //Setting random file input

@@ -20,7 +20,7 @@ public class UserInput {
     private int items;
     public int requestNum;
     public DatabaseAccess database;
-    private boolean initiatedConnection;
+    public boolean initiatedConnection; //changed this for test- nuha
 
     private String [] chairTypes = {"Task", "Mesh", "Kneeling", "Ergonomic", "Executive"};
     private String [] lampTypes = {"Desk", "Swing Arm", "Study"};
