@@ -171,7 +171,7 @@ public class PriceCalc {
      * @params size of the combination to be printed, size of data[] array
      * @return nothing
     */
-    private void allCombinations(int arr[], int data[], int start, int end, int index, int r) {  
+    private void allCombinations(int[] arr, int[] data, int start, int end, int index, int r) {  
         if (index == r) { // current combination is ready now to be checked
             checkCombination(data);
             return; //base case
@@ -206,26 +206,26 @@ public class PriceCalc {
             }  
         }  
 
-        String myitems[][] = new String[number][categories.length]; //creates an empty 2D array the size of the furniture pieces and # of items requested to know whether the combo is sucesfful
+        String myItems[][] = new String[number][categories.length]; //creates an empty 2D array the size of the furniture pieces and # of items requested to know whether the combo is sucesfful
 
         for(int num = 0; num < number; num++){
-            for(int cat = 0; cat < myitems[0].length; cat++){
-                myitems[num][cat] = "N"; //default nothing has been added all furniture items are N
+            for(int cat = 0; cat < myItems[0].length; cat++){
+                myItems[num][cat] = "N"; //default nothing has been added all furniture items are N
             }
         }
       
         for(int j = 0; j < indexArr.length; j++){
-            for(int category = 0; category < myitems[0].length; category++){
+            for(int category = 0; category < myItems[0].length; category++){
                 for(int num = 0; num < number; num++){ //go down the category to fulfill other orders if ones before already Y for that furniture piece
-                    if(myitems[num][category].equals("N")){
-                        myitems[num][category] = typeAvailable[indexArr[j]][category]; //copies in the Y and N values at the given index to our items array to see if can fill up the whole thing with Y
+                    if(myItems[num][category].equals("N")){
+                        myItems[num][category] = typeAvailable[indexArr[j]][category]; //copies in the Y and N values at the given index to our items array to see if can fill up the whole thing with Y
                         break;
                     }
                 }
             }
         }
 
-        if(comboFound(myitems)){ //if our array is all Y, sucesfull combo!
+        if(comboFound(myItems)){ //if our array is all Y, sucesfull combo!
             this.fulfilled = true;
             Integer price = 0;
 
@@ -256,13 +256,13 @@ public class PriceCalc {
 
     /**
      * Checks if our temporary array has all Y's if so then a sucesfull combo has been found for entire order
-     * @params String[][] myitems is 2D array that holds the Y and N values of a specfic index combination to try and attempt to fill it all with Y
+     * @params String[][] myItems is 2D array that holds the Y and N values of a specfic index combination to try and attempt to fill it all with Y
      * @return boolean value, true if all Y's, false otehrwise
     */
-    private boolean comboFound(String[][] myitems){
+    private boolean comboFound(String[][] myItems){
         for(int items = 0; items < number; items++){
-            for(int i = 0; i < myitems[0].length; i++){
-                if(myitems[items][i].equals("N")){ //not equal to Y
+            for(int i = 0; i < myItems[0].length; i++){
+                if(myItems[items][i].equals("N")){ //not equal to Y
                     return false;
                 } 
             }
