@@ -26,4 +26,4 @@ To run the tests use this command:
     java -cp .:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:lib/system-rules-1.19.0.jar:lib/mysql-connector-java-8.0.23.jar:. org.junit.runner.JUnitCore edu.ucalgary.ensf409.UserInputTest
 
 ## Testing Notes
-Everytime a test is run the inventory database will be reset to reflect the original given database and all the deleted rows will be restored.
+The tests work against the expected database, it is required for the tests to be run againt the given inventory database for them to work. Everytime a test is run the inventory database will be reset to reflect the original given database and all the deleted rows will be restored.
