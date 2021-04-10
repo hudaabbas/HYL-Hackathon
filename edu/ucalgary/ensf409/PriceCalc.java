@@ -76,6 +76,7 @@ public class PriceCalc {
         }  
         
         if(fulfilled){ //if order sucesfull create your order .txt file
+            System.out.println("The cheapest furniture combo is $" + this.cheapestPrice);
             OrderForm order= new OrderForm(programInfo, cheapestPrice, itemCombination);
             order.createFile("OrderForm");
             infoToRestore = order.storedItemInfo;
