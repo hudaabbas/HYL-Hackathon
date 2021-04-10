@@ -13,6 +13,7 @@ import org.junit.*;
 import java.sql.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.lang.Exception;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 /** UserInputTest is a class that tests all the classes in our program and their methods
@@ -189,9 +190,13 @@ public class UserInputTest{
     testObj.setFurnitureType("TestType");
     testObj.setItems(3);
     String[] testIDs = {"Test1","Test2"};
-    OrderForm order = new OrderForm(testObj, 150, testIDs);
-    order.createFile("TestFile"); //will create a file called TestFile0.txt
-    //Note: will also try to delete a table but since TestCategory is not a valid table will catch error and move on
+    try{ 
+      OrderForm order = new OrderForm(testObj, 150, testIDs);
+      order.createFile("TestFile"); //will create a file called TestFile0.txt
+    }catch(IllegalArgumentException e){
+      //try's to delete a table but since TestCategory is not a valid table catch error and move on
+    }
+    
     boolean test = true;
     
     String[] tempArray = {
@@ -225,6 +230,48 @@ public class UserInputTest{
     assertTrue("calling createFile() which creates a formated order in a .txt file using the price, request and ID ordered failed", test);
   }
   
+  @Test
+  //Tests removeItem method from UpdateInventory class
+  //Checks number of rows that were updated
+  public void testRemoveItem(){ 
+    String[] Ids= {"D1030","D2746"};
+    int rows = 0; 
+    try{  
+      Connection db = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
+      UpdateInventory testInventory= new UpdateInventory(db,Ids);
+      testInventory.removeItem("DESK");
+      rows = testInventory.getRowsUpdated();
+    } catch(SQLException e){
+      System.out.println("Unsucesfull dbconection when doing testRemoveItem test");
+      System.exit(1);
+    }
+
+    //Copys info from the ID's that were removed above to restore the inventory database after this test
+    this.itemInfo = new String[2];
+    this.itemInfo[0]= "D1030, Adjustable, N, Y, N, 150, 002";
+    this.itemInfo[1]= "D2746, Adjustable, Y, N, Y, 250, 004";
+
+    assertEquals("calling removeItem which removes the desired row matching the ID numberes failed", 2, rows);    
+  }
+
+  @Test  (expected= IllegalArgumentException.class)
+  //Tests removeItem method from UpdateInventory class
+  //Expects an error to be thrown if an item doesn't exist in the database
+  public void testRemoveItemInvalid_Exception() {
+    String[] Ids= {"D1031","D2749","D1339"}; //invalid ID's
+    Connection db = null;
+    try{  
+      db = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
+      
+    } catch(SQLException e){
+      System.out.println("Unsucesfull dbconection when doing testRemoveItem test");
+      System.exit(1);
+    }
+
+    UpdateInventory testInventory= new UpdateInventory(db,Ids);
+    testInventory.removeItem("desk");
+  }
+
   @Rule
   // Handle System.exit() status
   public final ExpectedSystemExit exit = ExpectedSystemExit.none();

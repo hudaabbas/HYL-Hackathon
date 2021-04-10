@@ -17,6 +17,7 @@ UpdateInventory is a class which removes the items ordered for the furniture fro
 public class UpdateInventory {
 	private Connection dbConnect;
 	private String[] itemsOrdered;
+	private int rowsUpdated; //returns number of updated rows
 
 	/** This constructor sets the database and items ordered from the PriceCalc class
     @params Connection dbConnect which had the database connection
@@ -27,19 +28,28 @@ public class UpdateInventory {
 		this.itemsOrdered = items;
 	}
 
+	/**
+     * Getter method for rowsUpdated
+     * @params nothing
+     * @return integer value of the number of rows in the database updated
+    */
+	public int getRowsUpdated() {
+		return rowsUpdated;
+	}
+
 	/** 
 	 * This method deletes all the items in the list that match the items ordered
      * @params String of the furniture category which is the name of the database table
      * @return nothing
     */
-	public String[] removeItem(String table) {
+	public String[] removeItem(String table) throws IllegalArgumentException {
 		String[] itemInfo= new String[itemsOrdered.length];  //Stores each row's info as a string in an array
-		try {
+		try{
 			//Gets all the information of all the furniture before it will be removed from inventory
 			for(int i=0;i<itemsOrdered.length;i++) {
 				Statement stment= dbConnect.createStatement();
 				ResultSet results= stment.executeQuery("SELECT *FROM "+table+" WHERE ID= '"+itemsOrdered[i]+"'");
-  
+				
 				while(results.next()) {
 					StringBuilder sb = new StringBuilder();
 					ResultSetMetaData rsmd = results.getMetaData();
@@ -54,20 +64,24 @@ public class UpdateInventory {
 				}
 				stment.close();
 				results.close();
-			  }
+			}
 
-			 //now deletes the funiture items after its been save
+			//now deletes the funiture items after its been save
 			for(int i=0;i<itemsOrdered.length;i++) {
 			   String query= "DELETE FROM "+table+" WHERE ID = ?";
 			   PreparedStatement st = dbConnect.prepareStatement(query);
 			   
 			   st.setString(1, itemsOrdered[i]);
-			   st.executeUpdate();  
+			   rowsUpdated+=st.executeUpdate();  
 			   st.close();
 			}
 			
+			if(rowsUpdated == 0){
+				throw new IllegalArgumentException("ID not registered in database, nothing updated");
+			}
+			
 		} catch(SQLException e) {
-			System.out.println("Error, unable to delete table");
+			throw new IllegalArgumentException("unable to delete table");
 		} 
 		return itemInfo;
 
