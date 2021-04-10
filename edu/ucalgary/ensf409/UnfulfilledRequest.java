@@ -29,8 +29,10 @@ public class UnfulfilledRequest{
         this.manufacturers = searchDBManufacture();
     }
 
-    /**
-    Getter
+     /**
+     * Getter method for manufactureres
+     * @params nothing
+     * @return ArrayList<String> of the manufactures for the users request
     */
     public ArrayList<String> getManufacturers(){
         return this.manufacturers;
