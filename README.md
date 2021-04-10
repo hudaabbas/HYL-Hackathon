@@ -24,7 +24,7 @@ You can make multiple requests in one run of the program and "quit" once you are
 ## Testing
 To compile the tests after compiling the program (see above under Usage) use this command:
 ```
-javac -cp .:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:lib/system-rules-1.19.0.jar:lib/mysql-connector-java-8.0.23.jar:. edu/ucalgary/ensf409/UserInputTest.java
+javac -cp .:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:lib/system-rules-1.19.0.jar:lib/mysql-connector-java-8.0.23.jar:. edu/ucalgary/ensf409/ProgramTest.java
 ```
 To run the tests use this command:
 ```
