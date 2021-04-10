@@ -14,26 +14,29 @@ import java.sql.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.lang.Exception;
-import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
-/** UserInputTest is a class that tests all the classes in our program and their methods
+/** ProgramTest is a class that tests all the classes in our program and their methods
  * Tests must be run against the expected given INVENTORY database to work
 */
 
-public class UserInputTest{
+public class ProgramTest{
   private String[] itemInfo;
   private Connection dbConnect;
 
   @Test
   //DatabaseAccess Class
+<<<<<<< HEAD:edu/ucalgary/ensf409/UserInputTest.java
   //using initializeConnection to test the initialization/close methods 
+=======
+  //using initiliazeConnection to test the initializtion/close methods
+>>>>>>> f5fd230fbb511e858246af9c7a159f5ee746397e:edu/ucalgary/ensf409/ProgramTest.java
   public void testDBConnect() {
     DatabaseAccess testObj = new DatabaseAccess("jdbc:mysql://localhost/inventory","scm","ensf409");
     boolean test = testObj.initializeConnection();
     try{
       testObj.close();
       if(test == testObj.getDBConnect().isClosed()){
-          test = true; 
+          test = true;
       }
     } catch (SQLException e){
         test = false;
@@ -69,16 +72,15 @@ public class UserInputTest{
     UserInput testObj = new UserInput("scm","ensf409");
 
     //replaces System.in which takes input from the command line with our own stream instead
-    ByteArrayInputStream in = new ByteArrayInputStream("Filing Medium 1".getBytes()); 
+    ByteArrayInputStream in = new ByteArrayInputStream("Filing Medium 1".getBytes());
     System.setIn(in);
     testObj.displayMenu();
     String expected = "Filing";
     String category = testObj.getFurnitureCategory();
-
     assertTrue("initializing furnitureCategory with displayMenu and testing it with its getter method failed", expected.equals(category));
   }
 
-  @Test 
+  @Test
   //displayMenu() and takeRequest() test
   //Checking if input properly parses # of items from a users input string when its greater than 0
   public void testFurnitureItemsInput() {
@@ -91,7 +93,7 @@ public class UserInputTest{
     assertTrue("initializing UserInput's private data member items with displayMenu which calls takeRequest and testing it with its getter method failed", expected == item);
   }
 
-  @Test 
+  @Test
   //using UserInput classes displayMenu() and takeRequest()
   //Checking if input properly parses a valid Furniture Type
   public void testFurnitureTypeInput() {
@@ -107,7 +109,7 @@ public class UserInputTest{
   @Test
   //UserInput's invalid takeRequest() test
   //Checking if catches improper # of items from a users input string if its 0 or less
-  public void testNegItems() {
+  public void testInvavlidNegFurnitureItems() {
     UserInput testObj = new UserInput("scm","ensf409");
     System.setIn(new ByteArrayInputStream("Desk Standing -3".getBytes()));
     testObj.displayMenu();
@@ -115,7 +117,40 @@ public class UserInputTest{
     assertTrue("initializing UserInput's items with a negative number should not update it, stay null", item == 0);
   }
 
+<<<<<<< HEAD:edu/ucalgary/ensf409/UserInputTest.java
   //!!Add tests for incorrect category/type where furnitureType and furnitureCateogory should be null!!
+=======
+  @Test
+  //Checking if input properly parses furiture category from a users input string
+  //testing if displayMenu() correctly returns the number that indicates invalid input (0)
+  //uncapitalized category is invalid, does not update furnitureCategory data member
+  public void testFurnitureCategoryInvalidInput() {
+    UserInput testObj = new UserInput("scm","ensf409");
+
+    //replaces System.in which takes input from the command line with our own stream instead
+    ByteArrayInputStream in = new ByteArrayInputStream("filing Medium 1".getBytes());
+    System.setIn(in);
+    int test = testObj.displayMenu(); // returning 0 indicates an incorect input given, resets & asks for another input after
+   
+    assertTrue("initializing furnitureCategory with an incorectly capatilized category failed", test == 0);
+  }
+
+  @Test
+  //using UserInput displayMenu() class and testing correctTypeOfObject() with a getter
+  //Checking if input properly parses only valid Furniture Type
+  //furniture types not in the inventory database should not update the furnitureType data member
+  public void testFurnitureTypeInvalidInput() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    System.setIn(new ByteArrayInputStream("Lamp NotAType 2".getBytes()));
+    testObj.displayMenu();
+    String type = testObj.getFurnitureType();
+    boolean invalid = true;
+    if(type == null){
+      invalid = false;
+    }
+    assertFalse("initializing furnitureType with an input that is not in the database should be null", invalid);
+  }
+>>>>>>> f5fd230fbb511e858246af9c7a159f5ee746397e:edu/ucalgary/ensf409/ProgramTest.java
 
   @Test
   //testing PriceCalc's calculateThePrice() method
@@ -127,11 +162,11 @@ public class UserInputTest{
     testObj.setFurnitureType("Small");
     testObj.setItems(2);
     PriceCalc priceObj = new PriceCalc(testObj);
-    priceObj.calculateThePrice(); 
-  
+    priceObj.calculateThePrice();
+
     int priceCalc = priceObj.getCheapestPrice();
     int expected = 200;
-   
+
     this.itemInfo = priceObj.infoToRestore; //Copy of all info for the ID's found to restore the inventory database after this test
 
     assertTrue("calling calculateThePrice() with valid inputs does not return the correct calculated price combination", priceCalc == expected);
@@ -150,15 +185,15 @@ public class UserInputTest{
     PriceCalc priceObj = new PriceCalc(testObj);
     priceObj.calculateThePrice(); //Note: this will also create extra/unwanted OrderForm0.txt file which is not being tested here
     boolean isTrue = priceObj.fulfilled; //should be true
-  
+
     this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
     assertTrue("calling calculateThePrice() with valid order form should change the boolean fulfilled PriceCalc data memeber to true", isTrue);
   }
 
   @Test
-   //testing PriceCalc's calculateThePrice() method
+  //testing PriceCalc's calculateThePrice() method
   //Directly setting user input
-  //check if the ID numbers for the items order is correctly stored 
+  //check if the ID numbers for the items order is correctly stored
   public void testIDOfItemsOrdered() {
     UserInput testObj = new UserInput("scm","ensf409");
     testObj.setFurnitureCategory("Lamp");
@@ -167,23 +202,23 @@ public class UserInputTest{
 
     PriceCalc priceObj = new PriceCalc(testObj);
     priceObj.calculateThePrice(); //Note: this will also create unwanted OrderForm0.txt file not being tested here
-    String[] itemCombo = priceObj.getItemCombination(); 
- 
+    String[] itemCombo = priceObj.getItemCombination();
+
     String[] itemsOrderedExpected = {"L013","L208","L564"};
     boolean test = true;
     for(int i = 0; i < itemCombo.length; i++){
       if(itemsOrderedExpected[i].equals(itemCombo[i])){ //check all ID's in the array match
-      } else { 
-        test = false; 
+      } else {
+        test = false;
       }
     }
 
     this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
     assertTrue("calling calculateThePrice() which stores the ID's of the fulfilled order in itemCombination failed", test);
   }
- 
+
   @Test
-   //testing OrderForms's createFile() method
+  //testing OrderForms's createFile() method
   //Setting random file input
   //check if calculated price, original request and ID numbers of the items ordered correctly read into file
   public void testOrderFormOutput() {
@@ -192,15 +227,15 @@ public class UserInputTest{
     testObj.setFurnitureType("TestType");
     testObj.setItems(3);
     String[] testIDs = {"Test1","Test2"};
-    try{ 
+    try{
       OrderForm order = new OrderForm(testObj, 150, testIDs);
       order.createFile("TestFile"); //will create a file called TestFile0.txt
     }catch(IllegalArgumentException e){
       //try's to delete a table but since TestCategory is not a valid table catch error and move on
     }
-    
+
     boolean test = true;
-    
+
     String[] tempArray = {
       "Furniture Order Form",
       "",
@@ -215,8 +250,8 @@ public class UserInputTest{
       "ID: Test2",
       "",
       "Total Price: $150"
-    }; 
-    
+    };
+
     try{
       String[] read = readFile("TestFile0.txt"); //reads in the created .txt file using helper utility method below
       for(int i = 0; i < read.length; i++){
@@ -228,17 +263,95 @@ public class UserInputTest{
     } catch(Exception e){
         test = false;
     }
-    
+
     assertTrue("calling createFile() which creates a formated order in a .txt file using the price, request and ID ordered failed", test);
   }
-  
+
+  @Test
+  //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
+  //this test looks for desks manufacturers specifically
+  public void testManufacturesArrayList_Desk() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    testObj.setFurnitureCategory("Desk");
+    testObj.setFurnitureType("Standing");
+    testObj.setItems(5);
+
+    UnfulfilledRequest checkClass = new UnfulfilledRequest(testObj);
+
+    ArrayList<String> manufacturers = new ArrayList<String>();
+    manufacturers.add("Academic Desks");
+    manufacturers.add("Office Furnishings");
+    manufacturers.add("Furniture Goods");
+    manufacturers.add("Fine Office Supplies");
+
+    assertTrue("Unfulfilled Request found wrong manufactuers for Desk Input", manufacturers.equals(checkClass.getManufacturers()));
+  }
+
+  @Test
+  //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
+  //this test looks for Chair manufacturers specifically
+  public void testManufacturesArrayList_Chair() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    testObj.setFurnitureCategory("Chair");
+    testObj.setFurnitureType("Executive");
+    testObj.setItems(5);
+
+    UnfulfilledRequest checkClass = new UnfulfilledRequest(testObj);
+
+    ArrayList<String> manufacturers = new ArrayList<String>();
+    manufacturers.add("Office Furnishings");
+    manufacturers.add("Chairs R Us");
+    manufacturers.add("Furniture Goods");
+    manufacturers.add("Fine Office Supplies");
+
+    assertTrue("Unfulfilled Request found wrong manufactuers for Chair Input", manufacturers.equals(checkClass.getManufacturers()));
+  }
+
+  @Test
+  //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
+  //this test looks for Lamp manufacturers specifically
+  public void testManufacturesArrayList_Lamp() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    testObj.setFurnitureCategory("Lamp");
+    testObj.setFurnitureType("Desk");
+    testObj.setItems(10);
+
+    UnfulfilledRequest checkClass = new UnfulfilledRequest(testObj);
+
+    ArrayList<String> manufacturers = new ArrayList<String>();
+    manufacturers.add("Office Furnishings");
+    manufacturers.add("Furniture Goods");
+    manufacturers.add("Fine Office Supplies");
+
+    assertTrue("Unfulfilled Request found wrong manufactuers for Lamp Input", manufacturers.equals(checkClass.getManufacturers()));
+  }
+
+  @Test
+  //testing to see if UnfulfilledRequest correctly finds a list of appropriate manufacturers
+  //this test looks for Filing manufacturers specifically
+  public void testManufacturesArrayList_Filing() {
+    UserInput testObj = new UserInput("scm","ensf409");
+    testObj.setFurnitureCategory("Filing");
+    testObj.setFurnitureType("Small");
+    testObj.setItems(10);
+
+    UnfulfilledRequest checkClass = new UnfulfilledRequest(testObj);
+
+    ArrayList<String> manufacturers = new ArrayList<String>();
+    manufacturers.add("Office Furnishings");
+    manufacturers.add("Furniture Goods");
+    manufacturers.add("Fine Office Supplies");
+
+    assertTrue("Unfulfilled Request found wrong manufactuers for Filing Input", manufacturers.equals(checkClass.getManufacturers()));
+  }
+
   @Test
   //Tests removeItem method from UpdateInventory class
   //Checks number of rows that were updated
-  public void testRemoveItem(){ 
+  public void testRemoveItem(){
     String[] Ids= {"D1030","D2746"};
-    int rows = 0; 
-    try{  
+    int rows = 0;
+    try{
       Connection db = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
       UpdateInventory testInventory= new UpdateInventory(db,Ids);
       testInventory.removeItem("DESK");
@@ -253,7 +366,7 @@ public class UserInputTest{
     this.itemInfo[0]= "D1030, Adjustable, N, Y, N, 150, 002";
     this.itemInfo[1]= "D2746, Adjustable, Y, N, Y, 250, 004";
 
-    assertEquals("calling removeItem which removes the desired row matching the ID numberes failed", 2, rows);    
+    assertEquals("calling removeItem which removes the desired row matching the ID numberes failed", 2, rows);
   }
 
   @Test  (expected= IllegalArgumentException.class)
@@ -262,9 +375,9 @@ public class UserInputTest{
   public void testRemoveItemInvalid_Exception() {
     String[] Ids= {"D1031","D2749","D1339"}; //invalid ID's
     Connection db = null;
-    try{  
+    try{
       db = DriverManager.getConnection("jdbc:mysql://localhost/inventory","scm","ensf409");
-      
+
     } catch(SQLException e){
       System.out.println("Unsucesfull dbconection when doing testRemoveItem test");
       System.exit(1);
@@ -274,19 +387,7 @@ public class UserInputTest{
     testInventory.removeItem("desk");
   }
 
-  @Rule
-  // Handle System.exit() status
-  public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-  /*
-  @Test
-  public void testFailedDBConnection() throws Exception {
- 
-    exit.expectSystemExitWithStatus(1);
-    System.exit(1);
-  } */
-
-
-  /** 
+  /**
    * Pre- and Post-test processes
   */
   @After
@@ -303,11 +404,11 @@ public class UserInputTest{
       System.out.println("Unsucesfull dbconection when doing post-test processes");
       System.exit(1);
     }
-  } 
+  }
 
 
-  /**  
-   * Utility methods to perform common routines 
+  /**
+   * Utility methods to perform common routines
   */
 
   //restore all data removed from the database
@@ -343,7 +444,7 @@ public class UserInputTest{
     return contents.toArray(new String[contents.size()]);
   }
 
-	/* 
+	/*
 	 * Restores items from table "Desk" or "filing"
 	*/
 	public void restoreDeskFiling(String table,String ID, String type, String legs, String top, String drawer, int price, String manuId) {
@@ -408,7 +509,7 @@ public class UserInputTest{
     } catch(SQLException e) {
       System.out.println("Error, unable to insert new item into table 'Chair' ");
     }
-  
+
   }
 
 	/*

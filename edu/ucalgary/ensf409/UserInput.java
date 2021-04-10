@@ -22,10 +22,10 @@ public class UserInput {
     public DatabaseAccess database;
     public boolean initiatedConnection;
 
-    private String [] chairTypes = {"Task", "Mesh", "Kneeling", "Ergonomic", "Executive"};
-    private String [] lampTypes = {"Desk", "Swing Arm", "Study"};
-    private String [] deskTypes = {"Traditional", "Adjustable", "Standing"};
-    private String [] filingTypes = {"Small", "Medium", "Large"};
+    private String[] chairTypes = {"Task", "Mesh", "Kneeling", "Ergonomic", "Executive"};
+    private String[] lampTypes = {"Desk", "Swing Arm", "Study"};
+    private String[] deskTypes = {"Traditional", "Adjustable", "Standing"};
+    private String[] filingTypes = {"Small", "Medium", "Large"};
 
     /** This constructor calls the Database constructor to initialize the connection
     @params the username for the database connection
@@ -112,6 +112,7 @@ public class UserInput {
         if(!continueProg){
             return 3;
         }
+        setFurnitureType(null); //invalid type remove it from data member, set to null
         System.out.println("wrong input given");
         return 0;
     }
@@ -125,6 +126,7 @@ public class UserInput {
         || furnitureCategory.equals("Filing") || furnitureCategory.equals("Lamp")){
             return true;
         }
+        setFurnitureCategory(null); //invalid category remove it from data member, set to null
         return false;
     }
 
@@ -177,7 +179,7 @@ public class UserInput {
             return true;
         }
         if(possibleItems.charAt(0) == '-'){
-            //items = -10
+            items = 0;
             return true;
         }
         furnitureType+=" ";
@@ -191,7 +193,7 @@ public class UserInput {
     @params UserInput class input
     @return returns the lowest price combo calculated
     */
-    public static void processRequest(UserInput program){
+    private static void processRequest(UserInput program){
         PriceCalc calculation = new PriceCalc(program);
         calculation.calculateThePrice();
     }
