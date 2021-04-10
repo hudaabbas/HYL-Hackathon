@@ -179,7 +179,7 @@ public class UserInput {
             return true;
         }
         if(possibleItems.charAt(0) == '-'){
-            //items = -10
+            items = 0;
             return true;
         }
         furnitureType+=" ";
