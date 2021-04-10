@@ -24,7 +24,8 @@ public class UserInputTest{
   private Connection dbConnect;
 
   @Test
-  //DatabaseAccess Test to confirm initializtion/close methods are all working
+  //DatabaseAccess Class
+  //using initiliazeConnection to test the initializtion/close methods 
   public void testDBConnect() {
     DatabaseAccess testObj = new DatabaseAccess("jdbc:mysql://localhost/inventory","scm","ensf409");
     boolean test = testObj.initializeConnection();
@@ -36,7 +37,25 @@ public class UserInputTest{
     } catch (SQLException e){
         test = false;
     }
-    assertTrue("", test);
+    assertTrue("The database connection was not sucesfully closed or wasn't correctly initialized at first", test);
+  }
+
+  @Test
+  //Testing passwords that is not the root for this project
+  // using incorrect random password
+  public void testDatabaseAccessIllegalPassword(){
+    UserInput testObj = new UserInput("scm","invalid");
+    boolean test= testObj.initiatedConnection;
+    assertEquals("The password set for the database connection is incorrect", false, test);
+  }
+
+  @Test
+  //Testing Username that is not part of the root for this project
+  //using incorrect random username
+  public void testDatabaseAccessIllegalUsername(){
+    UserInput testObj = new UserInput("sweg","ensf409");
+    boolean test= testObj.initiatedConnection;
+    assertFalse("The username set for the database connection is incorrect", test);
   }
 
   @Test
@@ -159,22 +178,7 @@ public class UserInputTest{
     this.itemInfo = priceObj.infoToRestore; //Copy of all the info from the ID's found to restore the inventory database after this test
     assertTrue("calling calculateThePrice() which stores the ID's of the fulfilled order in itemCombination failed", test);
   }
-  @Test
-  //Testing passwords that is not the root for this project
-  // using incorrect random password
-  public void testDatabaseAccessIllegalPassword(){
-    UserInput testObj = new UserInput("scm","ensf29");
-    boolean test= testObj.initiatedConnection;
-    assertEquals("The password is incorrect", true, test);
-  }
-  @Test
-  //Testing Username that is not part of the root for this project
-  //using incorrect random username
-  public void testDatabaseAccessIllegalUsername(){
-    UserInput testObj = new UserInput("sweg","ensf409");
-    boolean test= testObj.initiatedConnection;
-    assertEquals("The username is incorrect", true, test);
-  }
+ 
   @Test
    //testing OrderForms's createFile() method
   //Setting random file input

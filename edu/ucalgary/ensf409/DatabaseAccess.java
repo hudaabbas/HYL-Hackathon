@@ -26,8 +26,7 @@ public class DatabaseAccess {
      * @params the password for the database connection 
      * 
     */
-    public DatabaseAccess (String DBURL, String USERNAME, String PASSWORD) throws IllegalArgumentException{
-        
+    public DatabaseAccess (String DBURL, String USERNAME, String PASSWORD) {
         this.DBURL = DBURL;
         this.USERNAME = USERNAME;
         this.PASSWORD = PASSWORD;
