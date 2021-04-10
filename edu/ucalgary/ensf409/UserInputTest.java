@@ -42,6 +42,7 @@ public class UserInputTest{
   }
 
   @Test
+  //DatabaseAccess Class
   //Testing passwords that is not the root for this project
   // using incorrect random password
   public void testDatabaseAccessIllegalPassword(){
@@ -51,6 +52,7 @@ public class UserInputTest{
   }
 
   @Test
+  //DatabaseAccess Class
   //Testing Username that is not part of the root for this project
   //using incorrect random username
   public void testDatabaseAccessIllegalUsername(){
