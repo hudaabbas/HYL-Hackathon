@@ -20,12 +20,12 @@ public class UserInput {
     private int items;
     public int requestNum;
     public DatabaseAccess database;
-    private boolean initiatedConnection;
+    public boolean initiatedConnection;
 
-    private String [] chairTypes = {"Task", "Mesh", "Kneeling", "Ergonomic", "Executive"};
-    private String [] lampTypes = {"Desk", "Swing Arm", "Study"};
-    private String [] deskTypes = {"Traditional", "Adjustable", "Standing"};
-    private String [] filingTypes = {"Small", "Medium", "Large"};
+    private String[] chairTypes = {"Task", "Mesh", "Kneeling", "Ergonomic", "Executive"};
+    private String[] lampTypes = {"Desk", "Swing Arm", "Study"};
+    private String[] deskTypes = {"Traditional", "Adjustable", "Standing"};
+    private String[] filingTypes = {"Small", "Medium", "Large"};
 
     /** This constructor calls the Database constructor to initialize the connection
     @params the username for the database connection
@@ -191,7 +191,7 @@ public class UserInput {
     @params UserInput class input
     @return returns the lowest price combo calculated
     */
-    public static void processRequest(UserInput program){
+    private static void processRequest(UserInput program){
         PriceCalc calculation = new PriceCalc(program);
         calculation.calculateThePrice();
     }
