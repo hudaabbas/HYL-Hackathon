@@ -25,11 +25,7 @@ public class ProgramTest{
 
   @Test
   //DatabaseAccess Class
-<<<<<<< HEAD:edu/ucalgary/ensf409/UserInputTest.java
-  //using initializeConnection to test the initialization/close methods 
-=======
   //using initiliazeConnection to test the initializtion/close methods
->>>>>>> f5fd230fbb511e858246af9c7a159f5ee746397e:edu/ucalgary/ensf409/ProgramTest.java
   public void testDBConnect() {
     DatabaseAccess testObj = new DatabaseAccess("jdbc:mysql://localhost/inventory","scm","ensf409");
     boolean test = testObj.initializeConnection();
@@ -117,9 +113,6 @@ public class ProgramTest{
     assertTrue("initializing UserInput's items with a negative number should not update it, stay null", item == 0);
   }
 
-<<<<<<< HEAD:edu/ucalgary/ensf409/UserInputTest.java
-  //!!Add tests for incorrect category/type where furnitureType and furnitureCateogory should be null!!
-=======
   @Test
   //Checking if input properly parses furiture category from a users input string
   //testing if displayMenu() correctly returns the number that indicates invalid input (0)
@@ -150,7 +143,6 @@ public class ProgramTest{
     }
     assertFalse("initializing furnitureType with an input that is not in the database should be null", invalid);
   }
->>>>>>> f5fd230fbb511e858246af9c7a159f5ee746397e:edu/ucalgary/ensf409/ProgramTest.java
 
   @Test
   //testing PriceCalc's calculateThePrice() method
